@@ -37,16 +37,23 @@ class CustomDocRequest(BaseModel):
 
 @app.get("/api/health")
 def health_check():
-    is_connected = db.ping()
-    docs = db.get_all_documents()
-    total_chunks = sum(d["total_chunks"] for d in docs)
-    return {
-        "status": "healthy" if is_connected else "database_unreachable",
-        "database": "auditlens_db",
-        "mongodb_connected": is_connected,
-        "indexed_documents_count": len(docs),
-        "total_vector_chunks": total_chunks
-    }
+    try:
+        is_connected = db.ping()
+        docs = db.get_all_documents() if is_connected else []
+        total_chunks = sum(d["total_chunks"] for d in docs)
+        return {
+            "status": "healthy" if is_connected else "database_unreachable",
+            "database": "auditlens_db",
+            "mongodb_connected": is_connected,
+            "indexed_documents_count": len(docs),
+            "total_vector_chunks": total_chunks
+        }
+    except Exception as e:
+        return {
+            "status": "degraded",
+            "mongodb_connected": False,
+            "error": str(e)
+        }
 
 @app.post("/api/seed")
 def seed_demo_data():

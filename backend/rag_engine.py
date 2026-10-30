@@ -8,8 +8,8 @@ from backend.sample_data import SAMPLE_DOCUMENTS
 
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "gemini-embedding-001")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip('"').strip("'")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "gemini-embedding-001").strip('"').strip("'")
 
 # List of models for automatic failover during traffic spikes
 FALLBACK_MODELS = [

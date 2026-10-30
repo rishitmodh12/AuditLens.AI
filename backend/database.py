@@ -5,10 +5,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-MONGODB_URI = os.getenv("MONGODB_URI", "")
-DATABASE_NAME = os.getenv("DATABASE_NAME", "auditlens_db")
-COLLECTION_NAME = os.getenv("COLLECTION_NAME", "documents")
-INDEX_NAME = os.getenv("INDEX_NAME", "vector_index")
+MONGODB_URI = os.getenv("MONGODB_URI", "").strip('"').strip("'")
+DATABASE_NAME = os.getenv("DATABASE_NAME", "auditlens_db").strip('"').strip("'")
+COLLECTION_NAME = os.getenv("COLLECTION_NAME", "documents").strip('"').strip("'")
+INDEX_NAME = os.getenv("INDEX_NAME", "vector_index").strip('"').strip("'")
 
 class Database:
     def __init__(self):
