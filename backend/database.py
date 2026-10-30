@@ -91,6 +91,11 @@ class Database:
         ]
         return list(self.collection.aggregate(pipeline))
 
+    def delete_document(self, doc_id: str) -> int:
+        """Delete all chunks belonging to a specific document."""
+        result = self.collection.delete_many({"doc_id": doc_id})
+        return result.deleted_count
+
     def clear_all(self):
         """Reset the collection for fresh demonstrations."""
         return self.collection.delete_many({})

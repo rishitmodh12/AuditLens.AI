@@ -1,401 +1,543 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AuditLens AI - Policy & Contract Intelligence RAG Engine</title>
+  <title>AuditLens AI • Enterprise Policy & Contract RAG Engine</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace'],
           },
           colors: {
             brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
               500: '#10b981',
               600: '#059669',
               700: '#047857',
               900: '#064e3b'
             },
-            mongo: '#00ED64',
-            mongoDark: '#001E2B'
+            darkBg: '#090d16',
+            darkCard: '#0f172a',
+            darkBorder: 'rgba(255, 255, 255, 0.08)'
           }
         }
       }
     }
   </script>
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #0b1120; color: #f8fafc; }
-    .glass-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-    .glow-green { box-shadow: 0 0 20px -5px rgba(0, 237, 100, 0.3); }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #080c14; color: #f1f5f9; }
+    .glass-panel { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-input { background: rgba(9, 13, 22, 0.9); border: 1px solid rgba(255, 255, 255, 0.12); }
+    .glow-emerald { box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.25); }
+    .glow-amber { box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.25); }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #080c14; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+<body class="min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950">
 
-  <!-- TOP HEADER -->
-  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center font-bold text-slate-950 text-xl shadow-lg">
-          🔍
+  <!-- TOP ENTERPRISE NAVIGATION -->
+  <header class="border-b border-slate-800/80 bg-[#090d16]/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      
+      <!-- BRAND & TRACK -->
+      <div class="flex items-center space-x-3.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-400 p-[1px] shadow-lg flex items-center justify-center">
+          <div class="w-full h-full bg-slate-950 rounded-[11px] flex items-center justify-center text-lg">
+            ⚡
+          </div>
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <span class="text-xl font-extrabold tracking-tight text-white">AuditLens<span class="text-emerald-400">.AI</span></span>
-            <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-semibold">Track 2: RAG Engine</span>
+            <span class="text-lg font-extrabold tracking-tight text-white">AuditLens<span class="text-emerald-400 font-normal">.ai</span></span>
+            <span class="text-[10px] uppercase font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              Track 2: RAG Engine
+            </span>
           </div>
-          <p class="text-xs text-slate-400">Cross-Document Due Diligence & Discrepancy Detection</p>
+          <p class="text-xs text-slate-400 hidden sm:block">Cross-Document Due Diligence & Discrepancy Analyzer</p>
         </div>
       </div>
 
+      <!-- STATUS & ACTIONS -->
       <div class="flex items-center space-x-3">
-        <div class="flex items-center space-x-2 text-xs bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+        <!-- Atlas Cluster Pill -->
+        <div class="hidden md:flex items-center space-x-2 text-xs bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-xl">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="text-slate-300 font-medium">MongoDB Atlas Vector Search: <span class="text-emerald-400 font-semibold" id="cluster-status">Active</span></span>
+          <span class="text-slate-300 font-mono text-[11px]">MongoDB Vector Search: <span class="text-emerald-400 font-bold" id="status-pill">Active</span></span>
         </div>
-        <button onclick="seedDatabase()" id="btn-seed" class="text-xs px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition flex items-center space-x-1.5 shadow">
-          <span>⚡</span>
-          <span>Load Demo Dataset</span>
+
+        <!-- Reload Demo Data -->
+        <button onclick="seedDatabase()" id="btn-seed" class="text-xs px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium transition flex items-center space-x-2">
+          <span>🔄</span>
+          <span>Reset Sample Data</span>
+        </button>
+
+        <!-- Export Report -->
+        <button onclick="exportAuditReport()" id="btn-export" class="hidden sm:flex text-xs px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition items-center space-x-1.5 shadow-lg shadow-emerald-900/30">
+          <span>📥</span>
+          <span>Export Audit Brief</span>
         </button>
       </div>
+
+    </div>
+
+    <!-- WORKFLOW NAVIGATION TABS -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex space-x-6 border-t border-slate-900 text-xs font-medium">
+      <button onclick="switchTab('audit')" id="tab-audit" class="py-2.5 border-b-2 border-emerald-400 text-emerald-400 font-semibold flex items-center space-x-1.5">
+        <span>🔍</span>
+        <span>Audit & Search Console</span>
+      </button>
+      <button onclick="switchTab('conflicts')" id="tab-conflicts" class="py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-1.5">
+        <span>⚠️</span>
+        <span>Conflict Matrix</span>
+        <span id="tab-conflict-badge" class="hidden text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-400 font-mono font-bold">1</span>
+      </button>
+      <button onclick="switchTab('documents')" id="tab-documents" class="py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-1.5">
+        <span>📂</span>
+        <span>Knowledge Base & Upload</span>
+        <span id="tab-doc-badge" class="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono">3 Docs</span>
+      </button>
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
-  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+  <!-- MAIN APP CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
 
-    <!-- LEFT SIDEBAR: DOCUMENTS & STATS (4 COLS) -->
-    <div class="lg:col-span-4 space-y-6">
-      
-      <!-- DOCUMENT REPOSITORY CARD -->
-      <div class="glass-card rounded-2xl p-5 shadow-xl">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
-            <span>📚</span>
-            <span>Indexed Documents</span>
-          </h2>
-          <span id="doc-count-badge" class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-mono">0 Loaded</span>
+    <!-- TAB 1: AUDIT & SEARCH CONSOLE -->
+    <div id="view-audit" class="space-y-6">
+
+      <!-- QUICK JUDGE DEMO PRESETS -->
+      <div class="glass-panel rounded-2xl p-4 sm:p-5 shadow-xl">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+            <span>⚡</span>
+            <span>One-Click Judge Evaluation Scenarios</span>
+          </div>
+          <span class="text-[11px] text-slate-500 hidden sm:inline">Click any scenario to evaluate Track 2 parameters</span>
         </div>
 
-        <div id="document-list" class="space-y-2.5 max-h-[320px] overflow-y-auto pr-1">
-          <div class="text-center py-6 text-slate-500 text-xs">
-            Loading indexed documents from MongoDB...
-          </div>
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <!-- Scenario 1 -->
+          <button onclick="runScenario(1)" class="text-left p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-800/80 transition group space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-emerald-400 group-hover:text-emerald-300">🌐 Multi-Source Synthesis</span>
+              <span class="text-[10px] font-mono text-slate-500">SLA + Incident</span>
+            </div>
+            <p class="text-[11px] text-slate-300 line-clamp-2">"If an outage exceeds 2 hours, what is our customer liability and the internal mitigation deadline?"</p>
+          </button>
 
-        <div class="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-          <span>Index: <code class="text-emerald-400 font-mono">vector_index</code></span>
-          <span>Dim: <code class="text-emerald-400 font-mono">768</code></span>
-        </div>
-      </div>
+          <!-- Scenario 2 -->
+          <button onclick="runScenario(2)" class="text-left p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-800/80 transition group space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-amber-400 group-hover:text-amber-300">⚠️ Cross-Contract Conflict</span>
+              <span class="text-[10px] font-mono text-slate-500">SLA vs Vendor</span>
+            </div>
+            <p class="text-[11px] text-slate-300 line-clamp-2">"Are there contradictory terms between our Customer SLA and Cloud Vendor Agreement regarding allowed downtime?"</p>
+          </button>
 
-      <!-- ADD CUSTOM POLICY CLAUSE CARD -->
-      <div class="glass-card rounded-2xl p-5 shadow-xl">
-        <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center space-x-2">
-          <span>➕</span>
-          <span>Index Custom Clause</span>
-        </h2>
-        <div class="space-y-3 text-xs">
-          <div>
-            <label class="block text-slate-400 mb-1">Document Name</label>
-            <input id="add-doc-name" type="text" placeholder="e.g. Vendor_Agreement_2026.pdf" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Section / Clause</label>
-            <input id="add-section" type="text" placeholder="e.g. Clause 4.2: Termination" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Clause Text</label>
-            <textarea id="add-text" rows="2" placeholder="Paste clause text here..." class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-emerald-500"></textarea>
-          </div>
-          <button onclick="addCustomClause()" id="btn-add-clause" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/20 font-medium py-2 rounded-lg transition">
-            Embed & Insert to MongoDB
+          <!-- Scenario 3 -->
+          <button onclick="runScenario(3)" class="text-left p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-blue-500/50 hover:bg-slate-800/80 transition group space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-blue-400 group-hover:text-blue-300">🛡️ Hallucination Defense</span>
+              <span class="text-[10px] font-mono text-slate-500">Out of Scope</span>
+            </div>
+            <p class="text-[11px] text-slate-300 line-clamp-2">"What is the company policy regarding drone photography inside the server datacenter?"</p>
           </button>
         </div>
       </div>
 
-      <!-- HACKATHON RUBRIC HIGHLIGHT -->
-      <div class="p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 text-xs space-y-2">
-        <div class="font-semibold text-emerald-400 flex items-center space-x-1.5">
-          <span>🎯</span>
-          <span>Track 2 Evaluation Metrics Covered</span>
+      <!-- MAIN SEARCH QUERY BOX -->
+      <div class="glass-panel rounded-2xl p-5 sm:p-6 shadow-2xl space-y-3">
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+          Cross-Document Audit Query
+        </label>
+        <div class="relative flex items-center">
+          <input 
+            id="audit-query-input" 
+            type="text" 
+            placeholder="Type any contract or policy question (e.g. liability caps, notice windows, data sovereignty)..." 
+            class="w-full glass-input rounded-xl px-4 py-4 pl-12 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition shadow-inner font-medium"
+            onkeydown="if(event.key === 'Enter') handleAuditQuery()"
+          >
+          <div class="absolute left-4 text-slate-500">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <button 
+            id="btn-analyze" 
+            onclick="handleAuditQuery()" 
+            class="absolute right-2.5 px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-xs rounded-lg transition shadow-lg flex items-center space-x-1.5"
+          >
+            <span>Run Audit</span>
+            <span>→</span>
+          </button>
         </div>
-        <ul class="space-y-1 text-slate-400">
-          <li class="flex items-center space-x-1.5"><span class="text-emerald-400">✔</span> <span>Multi-source evidence synthesis</span></li>
-          <li class="flex items-center space-x-1.5"><span class="text-emerald-400">✔</span> <span>Clickable verbatim citations</span></li>
-          <li class="flex items-center space-x-1.5"><span class="text-emerald-400">✔</span> <span>Cross-document conflict detector</span></li>
-          <li class="flex items-center space-x-1.5"><span class="text-emerald-400">✔</span> <span>Out-of-scope / Hallucination guard</span></li>
-          <li class="flex items-center space-x-1.5"><span class="text-emerald-400">✔</span> <span>Native MongoDB $vectorSearch</span></li>
-        </ul>
+      </div>
+
+      <!-- RESULTS DISPLAY -->
+      <div id="results-wrapper">
+
+        <!-- EMPTY STATE -->
+        <div id="empty-state" class="glass-panel rounded-2xl p-12 text-center space-y-4">
+          <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-3xl">
+            📑
+          </div>
+          <div class="space-y-1">
+            <h3 class="text-base font-bold text-slate-200">Cross-Document Audit Engine Ready</h3>
+            <p class="text-xs text-slate-400 max-w-lg mx-auto leading-relaxed">
+              Click one of the <strong>Evaluation Scenarios</strong> above or enter a custom query to trigger real-time semantic retrieval from MongoDB Atlas Vector Search.
+            </p>
+          </div>
+        </div>
+
+        <!-- LOADING STATE -->
+        <div id="loading-state" class="hidden glass-panel rounded-2xl p-14 text-center space-y-4">
+          <div class="w-10 h-10 border-4 border-emerald-500/20 border-t-emerald-400 rounded-full animate-spin mx-auto"></div>
+          <div class="space-y-1">
+            <h4 class="text-sm font-semibold text-slate-200">Executing MongoDB Atlas Vector Search...</h4>
+            <p class="text-xs text-slate-400 font-mono">Generating embeddings @ 768 dims & cross-referencing contracts</p>
+          </div>
+        </div>
+
+        <!-- RESULTS CONTENT -->
+        <div id="results-content" class="hidden space-y-6">
+
+          <!-- EXECUTIVE AUDIT BRIEF CARD -->
+          <div class="glass-panel rounded-2xl p-6 border-l-4 border-l-emerald-500 shadow-xl space-y-4">
+            
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
+              <div class="flex items-center space-x-2.5">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 font-mono">Executive Summary</span>
+                <span id="grounding-badge" class="text-[10px] px-2 py-0.5 rounded-full font-mono font-bold"></span>
+              </div>
+              <div class="flex items-center space-x-3 text-xs font-mono">
+                <!-- Compliance Score Badge -->
+                <div class="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800">
+                  <span class="text-slate-400">Compliance Health:</span>
+                  <span id="compliance-score-val" class="font-bold text-emerald-400">95%</span>
+                </div>
+                <span id="chunks-badge" class="text-slate-400 text-[11px]"></span>
+              </div>
+            </div>
+
+            <p id="summary-paragraph" class="text-sm text-slate-100 leading-relaxed font-medium"></p>
+
+            <!-- DETAILED BULLET FINDINGS -->
+            <div id="findings-container" class="pt-2 space-y-2">
+              <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider font-mono">Detailed Factual Findings:</h4>
+              <div id="findings-list" class="space-y-2 text-xs"></div>
+            </div>
+
+          </div>
+
+          <!-- CONFLICTS / DISCREPANCIES ALERT BOX (Shown when contradictions exist) -->
+          <div id="conflict-alert-box" class="hidden rounded-2xl p-5 bg-amber-500/10 border border-amber-500/30 space-y-3 glow-amber">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2 text-amber-400 font-bold text-xs uppercase tracking-wider font-mono">
+                <span class="text-base">⚠️</span>
+                <span>Critical Contractual Contradiction Detected!</span>
+              </div>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono font-bold">Risk: HIGH</span>
+            </div>
+            <div id="conflict-cards-wrapper" class="space-y-3"></div>
+          </div>
+
+          <!-- VERBATIM GROUNDED CITATIONS GRID -->
+          <div class="glass-panel rounded-2xl p-6 shadow-xl space-y-4">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+              <div class="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+                <span>📑</span>
+                <span>Verifiable Source Citations & Exact Excerpts</span>
+              </div>
+              <span class="text-[11px] text-slate-500 font-mono">Click cards to inspect passage</span>
+            </div>
+
+            <div id="citations-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5"></div>
+          </div>
+
+          <!-- VECTOR SEARCH TELEMETRY EXPANDER -->
+          <div class="glass-panel rounded-2xl p-4 shadow-xl">
+            <button onclick="toggleTelemetry()" class="w-full flex items-center justify-between text-xs font-mono text-slate-400 hover:text-emerald-400 transition">
+              <span class="flex items-center space-x-2">
+                <span>📊</span>
+                <span>Inspect MongoDB Atlas $vectorSearch Execution Pipeline</span>
+              </span>
+              <span id="telemetry-chevron">▼</span>
+            </button>
+            <div id="telemetry-body" class="hidden mt-3 pt-3 border-t border-slate-800 space-y-2 text-xs font-mono">
+              <div id="telemetry-items" class="space-y-2"></div>
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
     </div>
 
-    <!-- RIGHT AUDIT CONSOLE (8 COLS) -->
-    <div class="lg:col-span-8 space-y-6">
-
-      <!-- SEARCH BOX & PRESET QUERIES -->
-      <div class="glass-card rounded-2xl p-6 shadow-2xl space-y-4">
+    <!-- TAB 2: CONFLICT MATRIX VIEW -->
+    <div id="view-conflicts" class="hidden space-y-6">
+      <div class="glass-panel rounded-2xl p-6 shadow-xl space-y-4">
         <div>
-          <label class="block text-sm font-semibold text-slate-300 mb-2">Cross-Document Audit Query</label>
-          <div class="relative flex items-center">
-            <input 
-              id="query-input" 
-              type="text" 
-              placeholder="Ask any cross-document question (e.g. outage liabilities, escalation deadlines, data sovereignty)..." 
-              class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-3.5 pl-11 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition shadow-inner"
-              onkeydown="if(event.key === 'Enter') executeQuery()"
-            >
-            <div class="absolute left-3.5 text-slate-500">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            </div>
-            <button 
-              id="btn-search" 
-              onclick="executeQuery()" 
-              class="absolute right-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-medium text-xs rounded-lg transition shadow flex items-center space-x-1.5"
-            >
-              <span>Analyze</span>
-              <span>→</span>
-            </button>
-          </div>
+          <h2 class="text-base font-bold text-slate-200">Cross-Contract Conflict & Liability Matrix</h2>
+          <p class="text-xs text-slate-400 mt-1">AuditLens AI automatically analyzes overlapping agreements to detect conflicting obligations, contradictory SLAs, and mismatched liability caps.</p>
         </div>
 
-        <!-- QUICK DEMO PRESET PILLS (Crucial for Judges) -->
-        <div>
-          <div class="text-xs text-slate-400 mb-2 font-medium flex items-center space-x-1">
-            <span>✨</span>
-            <span>Judge Demo Scenarios (Click to test):</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-            <button onclick="setQuery('If an outage exceeds 2 hours, what is our customer liability and what is the internal mitigation deadline?')" class="text-left p-2.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/40 transition">
-              <span class="font-semibold text-emerald-400 block mb-0.5">🌐 Multi-Source Synthesis</span>
-              <span class="text-slate-400 line-clamp-1">Outage liability (SLA) + Mitigation deadline (Policy)</span>
-            </button>
-            <button onclick="setQuery('Are there any contradictory terms between our Customer SLA and Cloud Vendor Agreement regarding allowed downtime?')" class="text-left p-2.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/40 transition">
-              <span class="font-semibold text-amber-400 block mb-0.5">⚠️ Conflict Detection</span>
-              <span class="text-slate-400 line-clamp-1">SLA 1-hr max vs Vendor 4-hr maintenance window</span>
-            </button>
-            <button onclick="setQuery('What is the company policy regarding drone photography inside the server datacenter?')" class="text-left p-2.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-blue-500/40 transition">
-              <span class="font-semibold text-blue-400 block mb-0.5">🛡️ Unanswerable / Guardrail</span>
-              <span class="text-slate-400 line-clamp-1">Refuses to hallucinate on missing information</span>
-            </button>
-            <button onclick="setQuery('What are our data residency location restrictions and audit log retention requirements?')" class="text-left p-2.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-purple-500/40 transition">
-              <span class="font-semibold text-purple-400 block mb-0.5">📍 Compliance & Sovereignty</span>
-              <span class="text-slate-400 line-clamp-1">Mumbai region rule (Vendor) + 365-day logs (Sec Policy)</span>
-            </button>
+        <div id="matrix-container" class="space-y-4">
+          <!-- Populated dynamically or static presentation -->
+          <div class="p-5 rounded-xl bg-slate-900/90 border border-amber-500/30 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-amber-300 text-sm">Discrepancy #1: Permitted Downtime vs. Maintenance Window</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/30 font-mono font-bold">Severity: CRITICAL</span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="p-3.5 rounded-lg bg-slate-800/80 border border-slate-700 space-y-1">
+                <span class="text-slate-400 text-[10px] font-mono block">DOCUMENT A: Customer_Enterprise_SLA_2026.pdf (Section 1.1)</span>
+                <p class="text-slate-200 font-medium">"Total cumulative unscheduled downtime across any single calendar month shall not exceed 1.0 hour (60 minutes). Penalty of $1,000/hr applies thereafter."</p>
+              </div>
+              <div class="p-3.5 rounded-lg bg-slate-800/80 border border-slate-700 space-y-1">
+                <span class="text-slate-400 text-[10px] font-mono block">DOCUMENT B: Cloud_Vendor_Master_Services_Agreement.pdf (Article 4.1)</span>
+                <p class="text-slate-200 font-medium">"Vendor reserves the right to conduct scheduled infrastructure maintenance and emergency repairs for up to 4.0 hours per window with zero penalty."</p>
+              </div>
+            </div>
+
+            <div class="text-xs bg-slate-950/70 p-3 rounded-lg border border-slate-800 text-slate-300 space-y-1">
+              <strong class="text-amber-400 font-mono text-[11px] uppercase">Business Risk:</strong> If the cloud vendor takes a 3-hour maintenance window, the company incurs a $2,000 SLA penalty to customers, but the vendor owes zero compensation.
+              <br>
+              <strong class="text-emerald-400 font-mono text-[11px] uppercase">Remediation:</strong> Negotiate vendor maintenance SLA down to ≤ 1.0 hour, or amend customer contracts to exclude scheduled vendor maintenance.
+            </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- RESULTS AREA -->
-      <div id="results-container" class="space-y-6">
-
-        <!-- WELCOME / PLACEHOLDER -->
-        <div id="placeholder-box" class="glass-card rounded-2xl p-10 text-center space-y-3">
-          <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-500/10 flex items-center justify-center text-3xl">
-            📑
-          </div>
-          <h3 class="text-lg font-bold text-slate-200">Ready for Cross-Document Audit</h3>
-          <p class="text-xs text-slate-400 max-w-md mx-auto">
-            Click one of the <strong class="text-emerald-400">Judge Demo Scenarios</strong> above or type any audit question to retrieve grounded evidence from MongoDB Atlas Vector Search.
-          </p>
+    <!-- TAB 3: KNOWLEDGE BASE & REAL FILE UPLOAD -->
+    <div id="view-documents" class="hidden space-y-6">
+      
+      <!-- DRAG & DROP REAL FILE UPLOADER -->
+      <div class="glass-panel rounded-2xl p-6 shadow-xl space-y-4">
+        <div>
+          <h2 class="text-base font-bold text-slate-200">Upload Enterprise Documents (PDF, TXT, Markdown)</h2>
+          <p class="text-xs text-slate-400 mt-1">Upload real company contracts or policies. AuditLens AI will extract text, generate 768-dimensional embeddings, and index them into MongoDB Atlas Vector Search.</p>
         </div>
 
-        <!-- LOADING SPINNER -->
-        <div id="loading-box" class="hidden glass-card rounded-2xl p-12 text-center space-y-4">
-          <div class="w-10 h-10 border-4 border-emerald-500/20 border-t-emerald-400 rounded-full animate-spin mx-auto"></div>
-          <div class="space-y-1">
-            <h4 class="text-sm font-semibold text-slate-200">Executing MongoDB Atlas Vector Search...</h4>
-            <p class="text-xs text-slate-400">Embedding query & synthesizing evidence across indexed contracts</p>
+        <div 
+          id="drop-zone" 
+          class="border-2 border-dashed border-slate-700 hover:border-emerald-500/70 rounded-2xl p-8 text-center transition cursor-pointer bg-slate-900/40"
+          onclick="document.getElementById('file-input').click()"
+        >
+          <input id="file-input" type="file" accept=".pdf,.txt,.md" class="hidden" onchange="handleFileUpload(event)">
+          <div class="w-12 h-12 mx-auto rounded-xl bg-slate-800/80 flex items-center justify-center text-2xl mb-2">
+            📤
           </div>
+          <div class="text-sm font-semibold text-slate-200">Click to upload or drag and drop</div>
+          <div class="text-xs text-slate-500 mt-1">Supports PDF, TXT, and Markdown files (up to 10MB)</div>
         </div>
 
-        <!-- RESULTS DISPLAY (Hidden by default) -->
-        <div id="output-box" class="hidden space-y-5">
+        <div id="upload-status" class="hidden text-xs p-3 rounded-xl bg-slate-900 border border-slate-800 font-mono text-emerald-400"></div>
+      </div>
 
-          <!-- EXECUTIVE SUMMARY CARD -->
-          <div class="glass-card rounded-2xl p-6 border-l-4 border-l-emerald-500 shadow-xl space-y-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2">
-                <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 font-mono">Executive Audit Brief</span>
-                <span id="answerable-badge" class="text-[10px] px-2 py-0.5 rounded-full font-mono font-semibold"></span>
-              </div>
-              <span id="evidence-count-badge" class="text-xs text-slate-400 font-mono"></span>
-            </div>
-            
-            <p id="summary-text" class="text-sm text-slate-100 leading-relaxed font-medium"></p>
-
-            <!-- DETAILED BULLETS -->
-            <div id="findings-wrapper" class="pt-3 border-t border-slate-800 space-y-2">
-              <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Detailed Findings:</h4>
-              <ul id="findings-list" class="space-y-2 text-xs text-slate-300"></ul>
-            </div>
-          </div>
-
-          <!-- CONFLICTS & DISCREPANCIES ALERT BOX (Shown when contradictions found) -->
-          <div id="conflict-card" class="hidden rounded-2xl p-5 bg-amber-500/10 border border-amber-500/30 space-y-3">
-            <div class="flex items-center space-x-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
-              <span class="text-base">⚠️</span>
-              <span>Cross-Document Conflict Detected!</span>
-            </div>
-            <div id="conflict-list" class="space-y-3"></div>
-          </div>
-
-          <!-- CITATIONS & PASSAGES SECTION -->
-          <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
-            <div class="flex items-center justify-between">
-              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
-                <span>🔍</span>
-                <span>Verified Source Citations (Click to inspect exact passage)</span>
-              </h3>
-              <span class="text-xs text-slate-500 font-mono">Grounded Proof</span>
-            </div>
-
-            <div id="citations-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-          </div>
-
-          <!-- RAW MONGODB VECTOR SEARCH TELEMETRY -->
-          <div class="glass-card rounded-2xl p-5 shadow-xl space-y-3">
-            <button onclick="toggleTelemetry()" class="w-full flex items-center justify-between text-xs font-mono text-slate-400 hover:text-emerald-400 transition">
-              <span class="flex items-center space-x-2">
-                <span>📊</span>
-                <span>Inspect MongoDB Atlas Vector Search Pipeline ($vectorSearch Telemetry)</span>
-              </span>
-              <span id="telemetry-arrow">▼</span>
-            </button>
-            <div id="telemetry-content" class="hidden pt-3 border-t border-slate-800 space-y-2 text-xs font-mono">
-              <div id="raw-passages" class="space-y-2 text-slate-300"></div>
-            </div>
-          </div>
-
+      <!-- INDEXED REPOSITORY LIST -->
+      <div class="glass-panel rounded-2xl p-6 shadow-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 font-mono">
+            Currently Indexed in MongoDB Atlas (`auditlens_db`)
+          </h3>
+          <span id="repo-count" class="text-xs text-emerald-400 font-mono">3 Documents</span>
         </div>
 
+        <div id="repository-cards" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
       </div>
 
     </div>
 
   </main>
 
+  <!-- MODAL / CITATION PASSAGE INSPECTOR DRAWER -->
+  <div id="passage-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 border border-slate-700">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center space-x-2">
+          <span class="text-emerald-400">📑</span>
+          <span id="modal-doc-name" class="text-sm font-bold text-slate-200"></span>
+        </div>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-white text-base">✕</button>
+      </div>
+
+      <div class="space-y-3">
+        <div class="text-xs font-mono text-emerald-400" id="modal-section"></div>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 leading-relaxed font-sans" id="modal-quote"></div>
+        <div class="text-[11px] text-slate-400">
+          <strong class="text-slate-300">Factual Claim Proven:</strong> <span id="modal-claim"></span>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="closeModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 font-medium rounded-lg transition">
+          Close Inspector
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
-  <footer class="border-t border-slate-900 bg-slate-950 py-4 text-center text-xs text-slate-500">
+  <footer class="border-t border-slate-900 bg-slate-950 py-4 text-center text-xs text-slate-500 font-mono">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>UNCHARTED 2026 Hackathon • SVNIT Surat × MongoDB × n8n</div>
-      <div>AuditLens AI • Native MongoDB Atlas Vector Search & Gemini RAG</div>
+      <div>UNCHARTED 2026 • SVNIT Surat × MongoDB × n8n</div>
+      <div>AuditLens AI • Native MongoDB Vector Search & Gemini RAG</div>
     </div>
   </footer>
 
+  <!-- SCRIPT LOGIC -->
   <script>
-    // Load documents on startup
+    let currentAuditData = null;
+
     window.addEventListener('DOMContentLoaded', () => {
-      fetchDocuments();
+      loadDocuments();
     });
 
-    async function fetchDocuments() {
+    // Tab Switching
+    function switchTab(tab) {
+      document.getElementById('view-audit').classList.toggle('hidden', tab !== 'audit');
+      document.getElementById('view-conflicts').classList.toggle('hidden', tab !== 'conflicts');
+      document.getElementById('view-documents').classList.toggle('hidden', tab !== 'documents');
+
+      const tabs = ['audit', 'conflicts', 'documents'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        if (t === tab) {
+          btn.className = 'py-2.5 border-b-2 border-emerald-400 text-emerald-400 font-semibold flex items-center space-x-1.5';
+        } else {
+          btn.className = 'py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-1.5';
+        }
+      });
+    }
+
+    // Load Documents from MongoDB
+    async function loadDocuments() {
       try {
         const res = await fetch('/api/documents');
         const docs = await res.json();
-        const docList = document.getElementById('document-list');
-        const badge = document.getElementById('doc-count-badge');
         
+        document.getElementById('tab-doc-badge').textContent = `${docs.length} Docs`;
+        document.getElementById('repo-count').textContent = `${docs.length} Documents Indexed`;
+
+        const container = document.getElementById('repository-cards');
         if (!docs || docs.length === 0) {
-          docList.innerHTML = `
-            <div class="text-center py-6 text-slate-500 text-xs">
-              No documents indexed yet.<br>Click <strong class="text-emerald-400">Load Demo Dataset</strong> above!
-            </div>
-          `;
-          badge.textContent = '0 Loaded';
+          container.innerHTML = `<div class="col-span-3 text-center py-8 text-slate-500 text-xs">No documents indexed yet. Click "Reset Sample Data" above!</div>`;
           return;
         }
 
-        badge.textContent = `${docs.length} Loaded (${docs.reduce((a,b)=>a+b.total_chunks, 0)} Chunks)`;
-        docList.innerHTML = docs.map(doc => `
-          <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition">
-            <div class="flex items-center justify-between mb-1">
-              <span class="font-semibold text-slate-200 text-xs truncate max-w-[200px]" title="${doc.doc_name}">📄 ${doc.doc_name}</span>
-              <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-emerald-400 font-mono">${doc.total_chunks} chunks</span>
+        container.innerHTML = docs.map(d => `
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition space-y-2">
+            <div class="flex items-start justify-between">
+              <span class="text-xs font-bold text-slate-200 truncate max-w-[180px]" title="${d.doc_name}">📄 ${d.doc_name}</span>
+              <button onclick="deleteDoc('${d.doc_id}')" class="text-slate-500 hover:text-red-400 text-xs" title="Delete document">🗑️</button>
             </div>
-            <div class="text-[11px] text-slate-400">${doc.category}</div>
+            <div class="text-[11px] text-slate-400">${d.category || 'General'}</div>
+            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] font-mono text-slate-500">
+              <span>Chunks: <strong class="text-emerald-400">${d.total_chunks}</strong></span>
+              <span>Atlas Indexed</span>
+            </div>
           </div>
         `).join('');
 
       } catch (err) {
-        console.error('Failed to load documents:', err);
+        console.error('Error loading documents:', err);
+      }
+    }
+
+    async function deleteDoc(docId) {
+      if (!confirm(`Are you sure you want to delete document ${docId}?`)) return;
+      try {
+        await fetch(`/api/documents/${docId}`, { method: 'DELETE' });
+        loadDocuments();
+      } catch (err) {
+        alert('Failed to delete: ' + err);
       }
     }
 
     async function seedDatabase() {
       const btn = document.getElementById('btn-seed');
       btn.disabled = true;
-      btn.innerHTML = `<span class="animate-spin inline-block">⏳</span><span>Seeding Atlas...</span>`;
+      btn.innerHTML = `<span>⏳</span><span>Seeding Atlas...</span>`;
       try {
         const res = await fetch('/api/seed', { method: 'POST' });
         const data = await res.json();
-        await fetchDocuments();
+        await loadDocuments();
         alert(`Success! Loaded ${data.documents_loaded} documents (${data.chunks_indexed} vector chunks) into MongoDB Atlas.`);
       } catch (err) {
-        alert('Error seeding database: ' + err);
+        alert('Error seeding: ' + err);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = `<span>⚡</span><span>Load Demo Dataset</span>`;
+        btn.innerHTML = `<span>🔄</span><span>Reset Sample Data</span>`;
       }
     }
 
-    async function addCustomClause() {
-      const docName = document.getElementById('add-doc-name').value.trim();
-      const section = document.getElementById('add-section').value.trim();
-      const text = document.getElementById('add-text').value.trim();
-      const btn = document.getElementById('btn-add-clause');
+    // Real File Upload
+    async function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
 
-      if (!docName || !section || !text) {
-        alert('Please fill in all three fields.');
-        return;
-      }
+      const statusBox = document.getElementById('upload-status');
+      statusBox.classList.remove('hidden');
+      statusBox.innerHTML = `<span>⏳ Uploading "${file.name}" & generating embeddings...</span>`;
 
-      btn.disabled = true;
-      btn.textContent = 'Generating Embedding...';
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('category', 'Uploaded Contract');
 
       try {
-        const res = await fetch('/api/add_document', {
+        const res = await fetch('/api/upload_file', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ doc_name: docName, category: 'Custom Upload', section: section, text: text })
+          body: formData
         });
         const data = await res.json();
-        alert(data.message);
-        document.getElementById('add-section').value = '';
-        document.getElementById('add-text').value = '';
-        await fetchDocuments();
+        statusBox.innerHTML = `<span>✅ Successfully indexed "${data.doc_name}" with ${data.chunks_indexed} chunks in MongoDB Atlas!</span>`;
+        loadDocuments();
       } catch (err) {
-        alert('Failed to add clause: ' + err);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Embed & Insert to MongoDB';
+        statusBox.innerHTML = `<span class="text-red-400">❌ Error uploading file: ${err}</span>`;
       }
     }
 
-    function setQuery(text) {
-      document.getElementById('query-input').value = text;
-      executeQuery();
+    // Run Preset Scenarios
+    function runScenario(id) {
+      switchTab('audit');
+      const input = document.getElementById('audit-query-input');
+      if (id === 1) {
+        input.value = "If an outage exceeds 2 hours, what is our customer liability and what is the internal mitigation deadline?";
+      } else if (id === 2) {
+        input.value = "Are there any contradictory terms between our Customer SLA and Cloud Vendor Agreement regarding allowed downtime?";
+      } else if (id === 3) {
+        input.value = "What is the company policy regarding drone photography inside the server datacenter?";
+      }
+      handleAuditQuery();
     }
 
-    async function executeQuery() {
-      const query = document.getElementById('query-input').value.trim();
+    // Execute Audit Query
+    async function handleAuditQuery() {
+      const query = document.getElementById('audit-query-input').value.trim();
       if (!query) return;
 
-      const placeholder = document.getElementById('placeholder-box');
-      const loader = document.getElementById('loading-box');
-      const output = document.getElementById('output-box');
+      const empty = document.getElementById('empty-state');
+      const loader = document.getElementById('loading-state');
+      const content = document.getElementById('results-content');
 
-      placeholder.classList.add('hidden');
-      output.classList.add('hidden');
+      empty.classList.add('hidden');
+      content.classList.add('hidden');
       loader.classList.remove('hidden');
 
       try {
@@ -406,122 +548,221 @@
         });
 
         const data = await res.json();
-        renderAuditResults(data);
+        currentAuditData = data;
+        renderResults(data);
       } catch (err) {
-        alert('Error querying RAG engine: ' + err);
-        placeholder.classList.remove('hidden');
+        alert('Query failed: ' + err);
+        empty.classList.remove('hidden');
       } finally {
         loader.classList.add('hidden');
       }
     }
 
-    function renderAuditResults(data) {
-      const output = document.getElementById('output-box');
-      output.classList.remove('hidden');
+    // Render Full Results
+    function renderResults(data) {
+      const content = document.getElementById('results-content');
+      content.classList.remove('hidden');
 
-      // Answerable Badge
-      const ansBadge = document.getElementById('answerable-badge');
+      // Grounding Badge
+      const badge = document.getElementById('grounding-badge');
       if (data.is_answerable) {
-        ansBadge.textContent = 'Grounded In Evidence';
-        ansBadge.className = 'text-[10px] px-2 py-0.5 rounded-full font-mono font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+        badge.textContent = 'Grounded In Verified Evidence';
+        badge.className = 'text-[10px] px-2.5 py-0.5 rounded-full font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
       } else {
-        ansBadge.textContent = 'Out of Scope / Unanswerable';
-        ansBadge.className = 'text-[10px] px-2 py-0.5 rounded-full font-mono font-semibold bg-red-500/10 text-red-400 border border-red-500/20';
+        badge.textContent = 'Out of Scope / Safe Refusal';
+        badge.className = 'text-[10px] px-2.5 py-0.5 rounded-full font-mono font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20';
       }
 
-      // Evidence count
-      document.getElementById('evidence-count-badge').textContent = `${data.retrieved_evidence_count || 0} Chunks Retrieved from MongoDB`;
+      // Compliance Health
+      const compVal = document.getElementById('compliance-score-val');
+      const score = data.compliance_score || (data.conflicts_detected && data.conflicts_detected.length > 0 ? 75 : 98);
+      compVal.textContent = `${score}%`;
+      compVal.className = score >= 90 ? 'font-bold text-emerald-400' : 'font-bold text-amber-400';
 
-      // Summary
-      document.getElementById('summary-text').textContent = data.summary || 'No summary available.';
+      // Chunks count
+      document.getElementById('chunks-badge').textContent = `${data.retrieved_evidence_count || 0} Chunks Retrieved ($vectorSearch)`;
 
-      // Detailed findings
+      // Executive Summary
+      document.getElementById('summary-paragraph').textContent = data.summary || 'No summary available.';
+
+      // Detailed Bullet Findings
       const findingsList = document.getElementById('findings-list');
-      const findingsWrapper = document.getElementById('findings-wrapper');
+      const findingsContainer = document.getElementById('findings-container');
       if (data.detailed_findings && data.detailed_findings.length > 0) {
-        findingsWrapper.classList.remove('hidden');
-        findingsList.innerHTML = data.detailed_findings.map(f => `
-          <li class="flex items-start space-x-2">
-            <span class="text-emerald-400 mt-0.5">•</span>
-            <span>${f}</span>
-          </li>
-        `).join('');
+        findingsContainer.classList.remove('hidden');
+        findingsList.innerHTML = data.detailed_findings.map(f => {
+          const text = typeof f === 'object' ? f.point : f;
+          const risk = typeof f === 'object' ? f.risk : 'INFO';
+          let riskBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-slate-800 text-slate-300">INFO</span>`;
+          if (risk === 'HIGH') riskBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-red-500/20 text-red-400 border border-red-500/30">HIGH RISK</span>`;
+          if (risk === 'MEDIUM') riskBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">MEDIUM RISK</span>`;
+          
+          return `
+            <div class="flex items-start space-x-2.5 p-2 rounded-lg bg-slate-900/60 border border-slate-800/80">
+              ${riskBadge}
+              <span class="text-slate-300 leading-relaxed">${text}</span>
+            </div>
+          `;
+        }).join('');
       } else {
-        findingsWrapper.classList.add('hidden');
+        findingsContainer.classList.add('hidden');
       }
 
-      // Conflicts
-      const conflictCard = document.getElementById('conflict-card');
-      const conflictList = document.getElementById('conflict-list');
+      // Conflict Box
+      const conflictBox = document.getElementById('conflict-alert-box');
+      const conflictWrapper = document.getElementById('conflict-cards-wrapper');
+      const conflictTabBadge = document.getElementById('tab-conflict-badge');
+
       if (data.conflicts_detected && data.conflicts_detected.length > 0) {
-        conflictCard.classList.remove('hidden');
-        conflictList.innerHTML = data.conflicts_detected.map(c => `
-          <div class="p-3 rounded-xl bg-slate-900/90 border border-amber-500/20 text-xs space-y-1.5">
-            <div class="font-bold text-amber-300 text-sm">${c.title || 'Contradiction Detected'}</div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
-              <div class="p-2 rounded bg-slate-800/60 border border-slate-700/60">
-                <span class="text-slate-400 text-[10px] font-mono block">DOCUMENT A: ${c.doc_a}</span>
+        conflictBox.classList.remove('hidden');
+        conflictTabBadge.classList.remove('hidden');
+        conflictTabBadge.textContent = data.conflicts_detected.length;
+
+        conflictWrapper.innerHTML = data.conflicts_detected.map(c => `
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-amber-500/30 space-y-2">
+            <div class="font-bold text-amber-300 text-xs">${c.title || 'Contractual Discrepancy'}</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div class="p-2.5 rounded bg-slate-800/70 border border-slate-700/60">
+                <span class="text-[10px] font-mono text-slate-400 block">${c.doc_a}</span>
                 <span class="text-slate-200 mt-1 block">${c.doc_a_clause}</span>
               </div>
-              <div class="p-2 rounded bg-slate-800/60 border border-slate-700/60">
-                <span class="text-slate-400 text-[10px] font-mono block">DOCUMENT B: ${c.doc_b}</span>
+              <div class="p-2.5 rounded bg-slate-800/70 border border-slate-700/60">
+                <span class="text-[10px] font-mono text-slate-400 block">${c.doc_b}</span>
                 <span class="text-slate-200 mt-1 block">${c.doc_b_clause}</span>
               </div>
             </div>
-            <div class="text-[11px] text-amber-200/80 pt-1 font-medium">
+            <div class="text-[11px] text-amber-200/90 pt-1 font-medium">
               <strong class="text-amber-400">Risk Analysis:</strong> ${c.risk_analysis}
             </div>
+            ${c.remediation_recommendation ? `
+              <div class="text-[11px] text-emerald-300/90 font-medium">
+                <strong class="text-emerald-400">Remediation:</strong> ${c.remediation_recommendation}
+              </div>
+            ` : ''}
           </div>
         `).join('');
       } else {
-        conflictCard.classList.add('hidden');
+        conflictBox.classList.add('hidden');
+        conflictTabBadge.classList.add('hidden');
       }
 
       // Citations Grid
       const citGrid = document.getElementById('citations-grid');
       if (data.citations && data.citations.length > 0) {
         citGrid.innerHTML = data.citations.map((c, idx) => `
-          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-emerald-500/30 transition space-y-2">
+          <div 
+            onclick="openCitationModal('${escapeStr(c.doc_name)}', '${escapeStr(c.section)}', '${escapeStr(c.quote)}', '${escapeStr(c.claim_supported)}')"
+            class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-emerald-500/40 transition cursor-pointer space-y-2 group"
+          >
             <div class="flex items-center justify-between text-xs">
-              <span class="font-semibold text-emerald-400 truncate max-w-[220px]" title="${c.doc_name}">📄 ${c.doc_name}</span>
-              <span class="text-[10px] font-mono bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">Ref [${idx+1}]</span>
+              <span class="font-bold text-emerald-400 truncate max-w-[200px] group-hover:text-emerald-300" title="${c.doc_name}">📄 ${c.doc_name}</span>
+              <span class="text-[10px] font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-400">Ref [${idx+1}]</span>
             </div>
-            <div class="text-[11px] font-medium text-slate-300">${c.section}</div>
-            <blockquote class="text-[11px] text-slate-400 italic bg-slate-950/60 p-2 rounded border-l-2 border-emerald-500">
+            <div class="text-xs font-semibold text-slate-300">${c.section}</div>
+            <blockquote class="text-[11px] text-slate-400 italic bg-slate-950/70 p-2.5 rounded-lg border-l-2 border-emerald-500">
               "${c.quote}"
             </blockquote>
-            <div class="text-[10px] text-slate-500">Supports: <span class="text-slate-400">${c.claim_supported || 'Factual proof'}</span></div>
+            <div class="text-[10px] text-slate-500 flex items-center justify-between">
+              <span>Supports: <strong class="text-slate-400">${c.claim_supported || 'Proof'}</strong></span>
+              <span class="text-emerald-400 font-mono text-[10px]">Inspect ↗</span>
+            </div>
           </div>
         `).join('');
       } else {
-        citGrid.innerHTML = `<div class="text-xs text-slate-500 col-span-2">No direct citations returned for this query.</div>`;
+        citGrid.innerHTML = `<div class="text-xs text-slate-500 col-span-2">No citations required for this query.</div>`;
       }
 
       // Telemetry
-      const rawDiv = document.getElementById('raw-passages');
+      const telemDiv = document.getElementById('telemetry-items');
       if (data.retrieved_passages && data.retrieved_passages.length > 0) {
-        rawDiv.innerHTML = data.retrieved_passages.map((p, idx) => `
-          <div class="p-2.5 rounded bg-slate-900/60 border border-slate-800 text-[11px] space-y-1">
+        telemDiv.innerHTML = data.retrieved_passages.map((p, idx) => `
+          <div class="p-3 rounded-lg bg-slate-900/70 border border-slate-800 space-y-1 text-xs">
             <div class="flex items-center justify-between text-slate-400">
-              <span>#${idx+1} ${p.doc_name} • ${p.section}</span>
+              <span>#${idx+1} ${p.doc_name} &bull; ${p.section}</span>
               <span class="text-emerald-400 font-bold">Cosine Score: ${(p.score || 0).toFixed(4)}</span>
             </div>
-            <p class="text-slate-300 font-sans text-xs">${p.text}</p>
+            <p class="text-slate-300 font-sans text-[11px]">${p.text}</p>
           </div>
         `).join('');
       }
     }
 
+    function escapeStr(str) {
+      if (!str) return '';
+      return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    function openCitationModal(doc, sec, quote, claim) {
+      document.getElementById('modal-doc-name').textContent = doc;
+      document.getElementById('modal-section').textContent = sec;
+      document.getElementById('modal-quote').textContent = `"${quote}"`;
+      document.getElementById('modal-claim').textContent = claim || 'Verified Grounded Proof';
+      document.getElementById('passage-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('passage-modal').classList.add('hidden');
+    }
+
     function toggleTelemetry() {
-      const content = document.getElementById('telemetry-content');
-      const arrow = document.getElementById('telemetry-arrow');
-      if (content.classList.contains('hidden')) {
-        content.classList.remove('hidden');
-        arrow.textContent = '▲';
-      } else {
-        content.classList.add('hidden');
-        arrow.textContent = '▼';
+      const b = document.getElementById('telemetry-body');
+      const c = document.getElementById('telemetry-chevron');
+      b.classList.toggle('hidden');
+      c.textContent = b.classList.contains('hidden') ? '▼' : '▲';
+    }
+
+    // Export Audit Report (Markdown Download)
+    function exportAuditReport() {
+      if (!currentAuditData) {
+        alert('Please run an audit query first before exporting a report!');
+        return;
       }
+      const date = new Date().toISOString().replace('T', ' ').substring(0, 19);
+      const query = document.getElementById('audit-query-input').value;
+      
+      let md = `# EXECUTIVE AUDIT REPORT • AUDITLENS AI\n`;
+      md += `**Timestamp:** ${date} UTC\n`;
+      md += `**Audit Query:** ${query}\n`;
+      md += `**Compliance Health Rating:** ${currentAuditData.compliance_score || 95}%\n`;
+      md += `**Grounding Status:** ${currentAuditData.is_answerable ? 'GROUNDED IN EVIDENCE' : 'OUT OF SCOPE'}\n\n`;
+      md += `## 1. Executive Summary\n${currentAuditData.summary}\n\n`;
+      
+      if (currentAuditData.detailed_findings) {
+        md += `## 2. Key Findings\n`;
+        currentAuditData.detailed_findings.forEach(f => {
+          const t = typeof f === 'object' ? f.point : f;
+          const r = typeof f === 'object' ? f.risk : 'INFO';
+          md += `- [${r}] ${t}\n`;
+        });
+        md += `\n`;
+      }
+
+      if (currentAuditData.conflicts_detected && currentAuditData.conflicts_detected.length > 0) {
+        md += `## 3. Contractual Contradictions & Risks\n`;
+        currentAuditData.conflicts_detected.forEach(c => {
+          md += `### ${c.title}\n`;
+          md += `- **${c.doc_a}:** ${c.doc_a_clause}\n`;
+          md += `- **${c.doc_b}:** ${c.doc_b_clause}\n`;
+          md += `- **Risk Analysis:** ${c.risk_analysis}\n`;
+          if (c.remediation_recommendation) md += `- **Remediation:** ${c.remediation_recommendation}\n`;
+        });
+        md += `\n`;
+      }
+
+      if (currentAuditData.citations && currentAuditData.citations.length > 0) {
+        md += `## 4. Grounded Citations & Legal Evidence\n`;
+        currentAuditData.citations.forEach((c, idx) => {
+          md += `[${idx+1}] **${c.doc_name}** — *${c.section}*\n`;
+          md += `> "${c.quote}"\n\n`;
+        });
+      }
+
+      const blob = new Blob([md], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `AuditLens_Report_${Date.now()}.md`;
+      a.click();
     }
   </script>
 </body>

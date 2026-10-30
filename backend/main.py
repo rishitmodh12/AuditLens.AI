@@ -1,19 +1,19 @@
 import os
 import sys
 from typing import Dict, Any, Optional
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from backend.database import db
-from backend.rag_engine import seed_database, query_rag_engine, get_embedding
+from backend.rag_engine import seed_database, query_rag_engine, get_embedding, process_and_index_file
 
 app = FastAPI(
-    title="AuditLens AI - Policy & Contract Intelligence RAG Engine",
+    title="AuditLens AI - Enterprise Policy & Contract Intelligence RAG Engine",
     description="Track 2: RAG Engine with MongoDB Atlas Vector Search and Gemini",
-    version="1.0.0"
+    version="2.0.0"
 )
 
 # Enable CORS for web clients
@@ -40,7 +40,7 @@ def health_check():
     try:
         is_connected = db.ping()
         docs = db.get_all_documents() if is_connected else []
-        total_chunks = sum(d["total_chunks"] for d in docs)
+        total_chunks = sum(d.get("total_chunks", 0) for d in docs)
         return {
             "status": "healthy" if is_connected else "database_unreachable",
             "database": "auditlens_db",
@@ -69,9 +69,31 @@ def list_documents():
     """Retrieve all indexed documents in MongoDB."""
     return db.get_all_documents()
 
+@app.delete("/api/documents/{doc_id}")
+def delete_document(doc_id: str):
+    """Delete an indexed document from MongoDB Atlas."""
+    try:
+        deleted = db.delete_document(doc_id)
+        return {"status": "success", "chunks_deleted": deleted}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/upload_file")
+async def upload_file(
+    file: UploadFile = File(...),
+    category: str = Form("User Upload")
+):
+    """Upload PDF, TXT, or Markdown documents, chunk them, and store in MongoDB Vector Search."""
+    try:
+        file_bytes = await file.read()
+        res = process_and_index_file(file_bytes, file.filename, category, db)
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/api/query")
 def run_audit_query(req: QueryRequest):
-    """Execute complete RAG pipeline with multi-source synthesis and citations."""
+    """Execute complete RAG pipeline with multi-source synthesis, citations, and risk detection."""
     if not req.query.strip():
         raise HTTPException(status_code=400, detail="Query cannot be empty.")
     try:

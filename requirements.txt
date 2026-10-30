@@ -6,3 +6,5 @@ python-dotenv
 pydantic
 requests
 httpx
+pypdf
+python-multipart
