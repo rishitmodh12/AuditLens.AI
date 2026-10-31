@@ -4,9 +4,9 @@ to Indian business, legal, and regulatory contexts (₹ INR, CERT-In, RBI, DPDP 
 
 Specifically crafted to demonstrate:
 1. Multi-source evidence synthesis (combining facts across 2 or 3 documents).
-2. Deep citations to exact sections and clauses.
+2. Deep citations to exact sections and clauses with verbatim quote verification.
 3. Contractual contradiction (Customer SLA max 1.0 hr allowed downtime vs Cloud Vendor 4.0 hrs maintenance window; and ₹75,000/hr SLA penalty vs Vendor ₹50,000 liability cap).
-4. Guardrails against out-of-scope / unanswerable questions.
+4. Guardrails against out-of-scope / unanswerable questions (Threshold-gated refusal).
 """
 
 SAMPLE_DOCUMENTS = [
@@ -21,11 +21,11 @@ SAMPLE_DOCUMENTS = [
             },
             {
                 "section": "Section 2.4: Outage Notification Protocol",
-                "text": "In accordance with Indian CERT-In and RBI cybersecurity guidelines, in the event of an unscheduled service interruption affecting production banking traffic, Provider must issue an official incident communication to Customer Technical Contacts within forty-five (45) minutes of incident detection."
+                "text": "In accordance with Indian regulatory frameworks, Provider adheres to a dual-track notification protocol: (a) External Statutory Reporting to CERT-In: In compliance with CERT-In Cyber Security Directions (2022), mandatory notification must be submitted to CERT-In (incident@cert-in.org.in) within six (6.0) hours of incident confirmation. (b) Customer Outage Notice: Provider must issue official incident advisories to Customer Technical Contacts within forty-five (45) minutes of incident detection across Indian banking networks."
             },
             {
                 "section": "Section 4.2: Service Credit Penalties & Liability",
-                "text": "If cumulative monthly downtime exceeds 1.0 hour, Customer shall be entitled to a Service Credit penalty of ₹75,000 INR for each full hour of downtime, up to a maximum aggregate credit of 50% of the customer's monthly recurring SaaS contract fee (capped at ₹3,75,000 INR per billing cycle)."
+                "text": "If cumulative monthly downtime exceeds the 1.0 hour permitted threshold (Section 1.1), Customer shall be entitled to a Service Credit penalty of ₹75,000 for each full hour of downtime beyond the initial 1.0 hour allowance. Calculation Rule: 1.0 hour outage is within permitted threshold (₹0 penalty); a 2.0 hour outage incurs 1 penalty hour (2.0 - 1.0 = 1.0 hr) totaling ₹75,000; a 3.0 hour outage incurs 2 penalty hours (3.0 - 1.0 = 2.0 hrs) totaling ₹1,50,000. Cumulative penalties are subject to an aggregate liability cap of ₹3,75,000 per monthly billing cycle."
             },
             {
                 "section": "Section 5.3: Force Majeure & Exclusions",
@@ -40,7 +40,7 @@ SAMPLE_DOCUMENTS = [
         "sections": [
             {
                 "section": "Clause 3.2: Incident Severity & Escalation",
-                "text": "Any unscheduled API gateway outage affecting more than 10% of active Indian banking sessions is automatically classified as a Severity-1 (Sev-1) incident. The Lead Site Reliability Engineer (SRE) must formally notify the VP of Engineering, Chief Information Security Officer (CISO), and Legal Counsel within thirty (30) minutes of alert confirmation."
+                "text": "Any unscheduled API gateway outage affecting more than 10% of active Indian banking sessions is automatically classified as a Severity-1 (Sev-1) incident. Escalation Timelines: (a) Internal Escalation: SRE Incident Commander must notify the CISO, VP of Engineering, and Legal Counsel within thirty (30) minutes of alert confirmation. (b) Statutory Escalation: Compliance Directorate must submit formal incident disclosures to CERT-In within six (6.0) hours in compliance with CERT-In 2022 Directions."
             },
             {
                 "section": "Clause 5.1: Mitigation & Patch Timelines",
@@ -71,7 +71,7 @@ SAMPLE_DOCUMENTS = [
             },
             {
                 "section": "Article 8.5: Vendor Maximum Liability Cap",
-                "text": "Notwithstanding any other provision, Vendor's total aggregate liability arising out of or related to infrastructure failures, hardware crashes, or service unavailability shall be capped at ₹50,000 INR total, regardless of the cause."
+                "text": "Notwithstanding any other provision, Vendor's total aggregate cumulative liability arising out of or related to infrastructure failures, hardware crashes, or service unavailability shall be strictly capped at ₹50,000 total, regardless of the cause or duration."
             },
             {
                 "section": "Article 11.2: Dispute Resolution & Jurisdiction",

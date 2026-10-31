@@ -15,7 +15,8 @@ from backend.rag_engine import (
     query_rag_engine, 
     get_embedding, 
     process_and_index_file,
-    scan_all_contract_conflicts
+    scan_all_contract_conflicts,
+    run_evaluation_benchmark
 )
 
 app = FastAPI(
@@ -137,13 +138,24 @@ def scan_conflicts():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/api/evaluate")
+def evaluate_benchmark():
+    """Run Track 2 formal evaluation benchmark over test suite (Recall@1, Recall@3, Refusal accuracy)."""
+    try:
+        report = run_evaluation_benchmark(db)
+        return report
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/api/auth/config")
 def get_auth_config():
     """Return public auth configuration."""
     client_id = os.getenv("GOOGLE_CLIENT_ID", "").strip('"').strip("'")
     return {
+        "status": "success",
         "google_client_id": client_id,
-        "is_configured": bool(client_id and client_id != "demo-client-id")
+        "is_configured": bool(client_id and client_id != "demo-client-id"),
+        "auth_mode": "auditor_session"
     }
 
 @app.get("/api/user/history")
@@ -165,17 +177,7 @@ def clear_all_audit_history(user_email: Optional[str] = "guest"):
     deleted_count = db.clear_all_history(user_email=user_email)
     return {"status": "success", "records_deleted": deleted_count}
 
-# GOOGLE AUTH & USER PROFILE ENDPOINTS
-@app.get("/api/auth/config")
-def get_auth_config():
-    """Return Google OAuth configuration status."""
-    return {
-        "status": "success",
-        "google_client_id": os.getenv("GOOGLE_CLIENT_ID", ""),
-        "configured": bool(os.getenv("GOOGLE_CLIENT_ID")),
-        "auth_mode": "direct_and_oauth"
-    }
-
+# AUDITOR SESSION & PROFILE ENDPOINTS
 @app.post("/api/auth/google")
 def auth_google(req: GoogleAuthRequest):
     """

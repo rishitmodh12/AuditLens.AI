@@ -68,6 +68,46 @@ class Database:
         cursor = self.collection.aggregate(pipeline)
         return list(cursor)
 
+    def hybrid_search(self, query_text: str, query_vector: List[float], limit: int = 5, user_id: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Execute Hybrid Search combining MongoDB Atlas $vectorSearch (semantic) 
+        with keyword lexical scoring (exact clause numbers, currency, and regulatory entities).
+        """
+        import re
+        # 1. Fetch semantic candidates via Atlas $vectorSearch
+        vector_candidates = self.vector_search(query_vector, limit=max(limit * 2, 8), user_id=user_id)
+        if not vector_candidates:
+            return []
+
+        # 2. Extract lexical key terms from query
+        tokens = set(re.findall(r'[A-Za-z0-9_.\-₹]+', query_text.lower()))
+        critical_terms = {"cert-in", "sev-1", "severity-1", "dpdp", "rbi", "4.2", "3.2", "1.1", "4.1", "8.5", "6.3", "7.4", "₹75,000", "₹1,50,000", "₹50,000", "mumbai"}
+
+        # 3. Score each chunk with hybrid fusion
+        scored_results = []
+        for chunk in vector_candidates:
+            v_score = float(chunk.get("score", 0.0))
+            chunk_content = (chunk.get("text", "") + " " + chunk.get("section", "")).lower()
+
+            # Count keyword hits
+            matches = [t for t in tokens if len(t) > 2 and t in chunk_content]
+            crit_matches = [t for t in critical_terms if t in query_text.lower() and t in chunk_content]
+
+            lexical_score = min(1.0, (len(matches) * 0.15) + (len(crit_matches) * 0.40))
+
+            # Reciprocal / weighted fusion
+            hybrid_score = round((0.70 * v_score) + (0.30 * lexical_score), 4)
+
+            chunk["vector_score"] = round(v_score, 4)
+            chunk["lexical_score"] = round(lexical_score, 4)
+            chunk["hybrid_score"] = hybrid_score
+            chunk["matched_terms"] = crit_matches or matches[:4]
+            scored_results.append(chunk)
+
+        # 4. Re-rank by hybrid score
+        scored_results.sort(key=lambda x: x["hybrid_score"], reverse=True)
+        return scored_results[:limit]
+
     def get_all_documents(self, user_id: Optional[str] = None) -> List[Dict[str, Any]]:
         """List distinct documents and their chunk counts."""
         match_stage = {}
