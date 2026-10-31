@@ -1072,8 +1072,11 @@
     // Dynamic Live Conflict Scan
     async function scanLiveConflicts() {
       const btn = document.getElementById('btn-scan-conflicts');
-      btn.disabled = true;
-      btn.innerHTML = `<span>⏳</span><span>Scanning with Gemini...</span>`;
+      const list = document.getElementById('conflict-matrix-list');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳</span><span>Scanning with Gemini...</span>`;
+      }
 
       try {
         const res = await fetch('/api/conflicts/scan');
@@ -1117,8 +1120,10 @@
       } catch (err) {
         showToast('Scan failed: ' + err, true);
       } finally {
-        btn.disabled = false;
-        btn.innerHTML = `<span>⚡</span><span>Scan Current Contracts</span>`;
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span>⚡</span><span>Scan Current Contracts</span>`;
+        }
       }
     }
 
