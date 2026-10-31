@@ -139,13 +139,38 @@ class Database:
         res = self.history_col.insert_one(record)
         return str(res.inserted_id)
 
-    def get_user_history(self, user_email: Optional[str] = None, limit: int = 15) -> List[Dict[str, Any]]:
-        """Retrieve recent audit queries."""
+    def get_user_history(self, user_email: Optional[str] = None, limit: int = 25) -> List[Dict[str, Any]]:
+        """Retrieve recent audit queries with stringified ID."""
         query = {}
         if user_email and user_email != "guest":
             query["user_email"] = user_email
-        cursor = self.history_col.find(query, {"_id": 0}).sort("created_at", -1).limit(limit)
-        return list(cursor)
+        cursor = self.history_col.find(query).sort("created_at", -1).limit(limit)
+        results = []
+        for doc in cursor:
+            doc["id"] = str(doc["_id"])
+            del doc["_id"]
+            results.append(doc)
+        return results
+
+    def delete_single_history(self, record_id: str, user_email: Optional[str] = None) -> bool:
+        """Permanently delete an individual audit history item."""
+        from bson import ObjectId
+        try:
+            query: Dict[str, Any] = {"_id": ObjectId(record_id)}
+            if user_email and user_email != "guest":
+                query["user_email"] = user_email
+            res = self.history_col.delete_one(query)
+            return res.deleted_count > 0
+        except Exception:
+            return False
+
+    def clear_all_history(self, user_email: Optional[str] = None) -> int:
+        """Permanently clear audit history for the current user."""
+        query = {}
+        if user_email and user_email != "guest":
+            query["user_email"] = user_email
+        res = self.history_col.delete_many(query)
+        return res.deleted_count
 
     def get_all_raw_chunks(self, limit: int = 50) -> List[Dict[str, Any]]:
         """Get sample chunks for cross-document conflict scanning."""

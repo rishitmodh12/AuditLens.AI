@@ -137,12 +137,45 @@ def scan_conflicts():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/api/auth/config")
+def get_auth_config():
+    """Return public auth configuration."""
+    client_id = os.getenv("GOOGLE_CLIENT_ID", "").strip('"').strip("'")
+    return {
+        "google_client_id": client_id,
+        "is_configured": bool(client_id and client_id != "demo-client-id")
+    }
+
 @app.get("/api/user/history")
 def get_audit_history(user_email: Optional[str] = "guest"):
     """Retrieve saved audit history from MongoDB Atlas."""
-    return db.get_user_history(user_email=user_email, limit=10)
+    return db.get_user_history(user_email=user_email, limit=25)
+
+@app.delete("/api/user/history/{record_id}")
+def delete_single_audit_history(record_id: str, user_email: Optional[str] = "guest"):
+    """Permanently delete an individual audit history entry from MongoDB Atlas."""
+    success = db.delete_single_history(record_id, user_email=user_email)
+    if not success:
+        raise HTTPException(status_code=404, detail="Audit history record not found or unauthorized.")
+    return {"status": "success", "message": "Record permanently deleted."}
+
+@app.delete("/api/user/history")
+def clear_all_audit_history(user_email: Optional[str] = "guest"):
+    """Permanently clear all audit history for this user from MongoDB Atlas."""
+    deleted_count = db.clear_all_history(user_email=user_email)
+    return {"status": "success", "records_deleted": deleted_count}
 
 # GOOGLE AUTH & USER PROFILE ENDPOINTS
+@app.get("/api/auth/config")
+def get_auth_config():
+    """Return Google OAuth configuration status."""
+    return {
+        "status": "success",
+        "google_client_id": os.getenv("GOOGLE_CLIENT_ID", ""),
+        "configured": bool(os.getenv("GOOGLE_CLIENT_ID")),
+        "auth_mode": "direct_and_oauth"
+    }
+
 @app.post("/api/auth/google")
 def auth_google(req: GoogleAuthRequest):
     """

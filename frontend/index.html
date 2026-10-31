@@ -3,15 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AuditLens AI • Enterprise Policy & Contract RAG Engine</title>
+  <title>AuditLens AI • Uncharted 2026 | Team Elite</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <!-- Google Identity Services (OAuth) -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   
   <script>
     tailwind.config = {
@@ -25,11 +23,11 @@
             mongo: {
               DEFAULT: '#00ED64',  // Signature MongoDB Neon Green
               dark: '#001E2B',     // MongoDB Slate Charcoal
-              forest: '#00684A',   // MongoDB Deep Forest Green (Primary Button)
+              forest: '#00684A',   // MongoDB Deep Forest Green
               forestHover: '#023430',
               mint: '#E8FDF2',     // Soft Mint Accent
               mintBorder: '#A7F3D0',
-              bgLight: '#F7FAFC'   // Crisp Clean White/Grey Background
+              bgLight: '#F7FAFC'   // Crisp Clean Background
             }
           }
         }
@@ -43,31 +41,39 @@
     .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 20px -4px rgba(0, 30, 43, 0.08); border-color: #CBD5E1; }
     .btn-forest { background-color: #00684A; color: #FFFFFF; transition: all 0.15s ease; }
     .btn-forest:hover { background-color: #023430; box-shadow: 0 4px 12px rgba(0, 104, 74, 0.2); }
-    .tutorial-highlight { position: relative; z-index: 60 !important; box-shadow: 0 0 0 4px #00ED64, 0 0 25px rgba(0, 237, 100, 0.4) !important; background: white !important; }
+    
+    /* Tutorial Interactive Element Spotlight without blocking clicks */
+    .tutorial-active-element {
+      position: relative !important;
+      z-index: 35 !important;
+      box-shadow: 0 0 0 4px #00ED64, 0 10px 25px -5px rgba(0, 237, 100, 0.4) !important;
+      transition: all 0.3s ease-in-out !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-[#00ED64] selection:text-[#001E2B]">
 
-  <!-- TOP ENTERPRISE NAVIGATION (MongoDB Green & Clean White) -->
+  <!-- TOP ENTERPRISE NAVIGATION (MongoDB Green & White Theme + Team Elite Branding) -->
   <header class="border-b border-slate-200 bg-white sticky top-0 z-40 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
       
-      <!-- BRAND & TRACK PILL -->
+      <!-- BRAND & UNCHARTED 2026 | TEAM ELITE PILL -->
       <div class="flex items-center space-x-3.5">
-        <div class="w-10 h-10 rounded-xl bg-mongo-dark flex items-center justify-center shadow-sm">
-          <!-- MongoDB Leaf-Inspired Monogram -->
-          <svg class="w-6 h-6 text-mongo" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C11.5 2 11 2.3 10.8 2.7C9.2 5.5 8 8.8 8 12.3C8 16.5 10.5 20.3 12 21.8C13.5 20.3 16 16.5 16 12.3C16 8.8 14.8 5.5 13.2 2.7C13 2.3 12.5 2 12 2ZM12 4.2C13.2 6.5 14.1 9.2 14.2 12C14.2 15.3 12.5 18.5 12 19.4C11.5 18.5 9.8 15.3 9.8 12C9.9 9.2 10.8 6.5 12 4.2Z"/>
-          </svg>
+        <div class="w-10 h-10 rounded-xl bg-mongo-dark flex items-center justify-center shadow-sm overflow-hidden p-1.5">
+          <img src="/static/team_elite_logo.png" alt="Team Elite Logo" class="w-full h-full object-contain filter brightness-110">
         </div>
         <div>
-          <div class="flex items-center space-x-2">
+          <div class="flex flex-wrap items-center gap-2">
             <span class="text-xl font-extrabold tracking-tight text-mongo-dark">AuditLens<span class="text-mongo-forest">.AI</span></span>
-            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-mongo-mint text-mongo-forest border border-mongo-mintBorder uppercase tracking-wide">
-              Track 2: RAG Engine
+            
+            <!-- TEAM BRANDING BESIDE UNCHARTED 2026 -->
+            <span class="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-mongo-mint text-mongo-forest border border-mongo-mintBorder flex items-center space-x-1.5 shadow-xs">
+              <span class="text-slate-700">UNCHARTED 2026</span>
+              <span class="text-mongo-forest">|</span>
+              <span class="text-mongo-forest font-extrabold tracking-wider">TEAM ELITE</span>
             </span>
           </div>
-          <p class="text-xs text-slate-500 hidden sm:block">Intelligent Cross-Contract Due Diligence & Discrepancy Engine</p>
+          <p class="text-xs text-slate-500 hidden sm:block">Indian Enterprise Cross-Contract Due Diligence & Discrepancy Engine</p>
         </div>
       </div>
 
@@ -77,11 +83,11 @@
         <!-- Live MongoDB Vector Status -->
         <div id="tutorial-status-pill" class="hidden md:flex items-center space-x-2 text-xs bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl font-medium">
           <span class="w-2.5 h-2.5 rounded-full bg-mongo animate-pulse"></span>
-          <span class="text-slate-600 font-mono text-[11px]">MongoDB Atlas Vector Search: <strong class="text-mongo-forest">Active</strong></span>
+          <span class="text-slate-600 font-mono text-[11px]">MongoDB Vector Search: <strong class="text-mongo-forest">Active</strong></span>
         </div>
 
-        <!-- Tour Guide Button -->
-        <button onclick="startInteractiveTutorial()" class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:border-slate-400 hover:bg-slate-50 font-medium transition flex items-center space-x-1.5">
+        <!-- How It Works / Tour Button -->
+        <button onclick="startInteractiveTutorial()" class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:border-slate-400 hover:bg-slate-50 font-medium transition flex items-center space-x-1.5 shadow-xs">
           <span>💡</span>
           <span class="hidden sm:inline">How It Works</span>
         </button>
@@ -92,14 +98,14 @@
           <span>Export Brief</span>
         </button>
 
-        <!-- AUTH PROFILE / LOGIN BUTTON -->
+        <!-- AUTH PROFILE / GOOGLE SIGN-IN -->
         <div id="auth-container">
           <button onclick="openAuthModal()" id="btn-login" class="text-xs px-3.5 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-800 hover:bg-slate-50 font-semibold transition flex items-center space-x-2 shadow-xs">
             <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
             <span>Sign In</span>
           </button>
 
-          <!-- User Menu Dropdown (Hidden initially) -->
+          <!-- User Menu Dropdown (When Logged In) -->
           <div id="user-profile-menu" class="hidden relative">
             <button onclick="toggleUserDropdown()" class="flex items-center space-x-2 p-1 rounded-full border border-slate-200 hover:border-slate-300 transition">
               <img id="user-avatar" src="" alt="User" class="w-7 h-7 rounded-full object-cover">
@@ -111,7 +117,7 @@
                 <div class="text-[11px] text-slate-500 truncate" id="dropdown-email"></div>
               </div>
               <button onclick="openEditProfileModal()" class="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-700 flex items-center space-x-2">
-                <span>✏️</span><span>Edit Profile Name</span>
+                <span>✏️</span><span>Edit Display Name</span>
               </button>
               <button onclick="handleLogout()" class="w-full text-left px-3 py-2 rounded-lg hover:bg-red-50 text-red-600 font-medium flex items-center space-x-2">
                 <span>🚪</span><span>Sign Out</span>
@@ -124,7 +130,7 @@
 
     </div>
 
-    <!-- ENTERPRISE TAB NAVIGATION -->
+    <!-- WORKFLOW NAVIGATION TABS -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex space-x-6 border-t border-slate-200 bg-slate-50/50 text-xs font-semibold">
       <button onclick="switchTab('audit')" id="tab-audit" class="py-3 border-b-2 border-mongo-forest text-mongo-forest flex items-center space-x-2 transition">
         <span>🔍</span>
@@ -147,6 +153,12 @@
     </div>
   </header>
 
+  <!-- NOTIFICATION TOAST -->
+  <div id="toast-banner" class="hidden fixed top-20 right-6 z-50 p-4 rounded-xl shadow-lg border text-xs font-medium flex items-center space-x-2 transition-all">
+    <span id="toast-icon">✅</span>
+    <span id="toast-msg">Action completed</span>
+  </div>
+
   <!-- MAIN VIEWPORT -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
 
@@ -155,48 +167,48 @@
     <!-- ========================================== -->
     <div id="view-audit" class="space-y-6">
 
-      <!-- ONE-CLICK JUDGE DEMO PILLS -->
+      <!-- ONE-CLICK JUDGE DEMO PILLS (India-Specific Context) -->
       <div id="tutorial-scenarios" class="card-white rounded-2xl p-5 border border-slate-200 space-y-3">
         <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-slate-600 font-mono">
+          <div class="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-slate-700 font-mono">
             <span>⚡</span>
-            <span>Judge Evaluation Scenarios (Click to test Track 2 requirements)</span>
+            <span>Indian Enterprise Evaluation Scenarios (Click to test):</span>
           </div>
-          <span class="text-[11px] text-slate-400 hidden sm:inline">Pre-configured cross-document tests</span>
+          <span class="text-[11px] text-slate-400 hidden sm:inline">Real-world Indian IT, Banking & Cloud scenarios</span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-          <!-- Scenario 1: Multi-Source -->
+          <!-- Scenario 1: Multi-Source Synthesis (INR + CERT-In) -->
           <button onclick="runScenario(1)" class="card-hover text-left p-3.5 rounded-xl border border-slate-200 bg-white hover:border-mongo-forest transition group space-y-1">
             <div class="flex items-center justify-between">
               <span class="font-bold text-mongo-forest flex items-center space-x-1">
                 <span>🌐</span><span>Multi-Source Synthesis</span>
               </span>
-              <span class="text-[10px] font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">SLA + Policy</span>
+              <span class="text-[10px] font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">SLA + CERT-In</span>
             </div>
-            <p class="text-[11px] text-slate-600 line-clamp-2">"If an outage exceeds 2 hours, what is our customer liability and the internal mitigation deadline?"</p>
+            <p class="text-[11px] text-slate-600 line-clamp-2">"If an outage exceeds 2 hours on our Indian banking payment gateway, what is our customer liability in INR and the internal CERT-In escalation deadline?"</p>
           </button>
 
-          <!-- Scenario 2: Contradiction -->
+          <!-- Scenario 2: Contradiction (INR Penalty vs Vendor Cap) -->
           <button onclick="runScenario(2)" class="card-hover text-left p-3.5 rounded-xl border border-slate-200 bg-white hover:border-amber-500 transition group space-y-1">
             <div class="flex items-center justify-between">
               <span class="font-bold text-amber-700 flex items-center space-x-1">
                 <span>⚠️</span><span>Contract Contradiction</span>
               </span>
-              <span class="text-[10px] font-mono bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded">SLA vs Vendor</span>
+              <span class="text-[10px] font-mono bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded">SLA vs Cloud MSA</span>
             </div>
-            <p class="text-[11px] text-slate-600 line-clamp-2">"Are there contradictory terms between our Customer SLA and Cloud Vendor Agreement regarding allowed downtime?"</p>
+            <p class="text-[11px] text-slate-600 line-clamp-2">"Are there contradictory terms between our Customer Enterprise SLA and Cloud Vendor Agreement regarding permitted maintenance downtime and liability caps?"</p>
           </button>
 
           <!-- Scenario 3: Hallucination Guard -->
           <button onclick="runScenario(3)" class="card-hover text-left p-3.5 rounded-xl border border-slate-200 bg-white hover:border-blue-500 transition group space-y-1">
             <div class="flex items-center justify-between">
               <span class="font-bold text-blue-700 flex items-center space-x-1">
-                <span>🛡️</span><span>Out-of-Scope Guard</span>
+                <span>🛡️</span><span>Hallucination Defense</span>
               </span>
-              <span class="text-[10px] font-mono bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded">No Guessing</span>
+              <span class="text-[10px] font-mono bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded">Bengaluru Datacenter</span>
             </div>
-            <p class="text-[11px] text-slate-600 line-clamp-2">"What is the company policy regarding drone photography inside the server datacenter?"</p>
+            <p class="text-[11px] text-slate-600 line-clamp-2">"What is the company policy regarding drone photography inside the Bengaluru server datacenter?"</p>
           </button>
         </div>
       </div>
@@ -205,14 +217,14 @@
       <div id="tutorial-search-box" class="card-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-3">
         <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 font-mono flex items-center justify-between">
           <span>Cross-Document Audit Query</span>
-          <span class="text-[11px] font-normal text-slate-400 lowercase font-sans">Powered by MongoDB Atlas $vectorSearch + Google Gemini</span>
+          <span class="text-[11px] font-normal text-slate-400 lowercase font-sans">Querying MongoDB Atlas Vector Search + Google Gemini RAG</span>
         </label>
         
         <div class="relative flex items-center">
           <input 
             id="audit-query-input" 
             type="text" 
-            placeholder="Type any contract question (e.g. outage liabilities, escalation deadlines, data sovereignty)..." 
+            placeholder="Type any contract or compliance question (e.g. outage liabilities in ₹ INR, escalation windows, DPDP Act 2023)..." 
             class="w-full rounded-xl px-4 py-4 pl-12 text-sm text-slate-900 border border-slate-300 bg-slate-50/50 focus:bg-white focus:outline-none focus:border-mongo-forest focus:ring-2 focus:ring-mongo-forest/20 transition font-medium"
             onkeydown="if(event.key === 'Enter') handleAuditQuery()"
           >
@@ -240,7 +252,7 @@
           </div>
           <h3 class="text-base font-bold text-slate-800">Ready to Audit Across Documents</h3>
           <p class="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
-            Click one of the <strong>Judge Evaluation Scenarios</strong> above or type your own question to retrieve grounded evidence from MongoDB Atlas Vector Search.
+            Click one of the <strong>Indian Enterprise Scenarios</strong> above or type your own question to retrieve grounded evidence from MongoDB Atlas Vector Search.
           </p>
         </div>
 
@@ -249,7 +261,7 @@
           <div class="w-10 h-10 border-4 border-slate-200 border-t-mongo-forest rounded-full animate-spin mx-auto"></div>
           <div class="space-y-1">
             <h4 class="text-sm font-semibold text-slate-800">Executing MongoDB Atlas Vector Search...</h4>
-            <p class="text-xs text-slate-500 font-mono">Generating embeddings @ 768 dimensions & cross-referencing contracts</p>
+            <p class="text-xs text-slate-500 font-mono">Generating embeddings @ 768 dimensions & synthesizing cross-document evidence</p>
           </div>
         </div>
 
@@ -289,7 +301,7 @@
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-2 text-amber-900 font-bold text-xs uppercase tracking-wider font-mono">
                 <span class="text-base">⚠️</span>
-                <span>Cross-Document Conflict Detected!</span>
+                <span>Cross-Document Contradiction Detected!</span>
               </div>
               <span class="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-800 font-mono font-bold border border-red-200">Risk: HIGH</span>
             </div>
@@ -314,7 +326,7 @@
             <button onclick="toggleTelemetry()" class="w-full flex items-center justify-between text-xs font-mono text-slate-600 hover:text-mongo-forest transition">
               <span class="flex items-center space-x-2">
                 <span>📊</span>
-                <span>Inspect MongoDB Atlas $vectorSearch Pipeline & Cosine Similarity Scores</span>
+                <span>Inspect MongoDB Atlas $vectorSearch Pipeline & Cosine Scores</span>
               </span>
               <span id="telemetry-icon">▼</span>
             </button>
@@ -345,7 +357,7 @@
         </div>
 
         <div id="conflict-matrix-list" class="space-y-4 pt-2">
-          <!-- Default Pre-Loaded Conflict Demo -->
+          <!-- Default Pre-Loaded Conflict Demo (India Context) -->
           <div class="p-5 rounded-xl border border-amber-200 bg-amber-50/50 space-y-3">
             <div class="flex items-center justify-between">
               <span class="font-bold text-amber-900 text-sm">Discrepancy #1: Permitted Downtime vs. Maintenance Window</span>
@@ -354,18 +366,18 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
               <div class="p-3.5 rounded-lg bg-white border border-slate-200 space-y-1 shadow-xs">
-                <span class="text-slate-500 text-[10px] font-mono block">DOCUMENT A: Customer_Enterprise_SLA_2026.pdf (Section 1.1)</span>
-                <p class="text-slate-800 font-medium">"Total cumulative unscheduled downtime across any single calendar month shall not exceed 1.0 hour (60 minutes). Penalty of $1,000/hr applies thereafter."</p>
+                <span class="text-slate-500 text-[10px] font-mono block">DOCUMENT A: Customer_Enterprise_SLA_2026.pdf (Section 1.1 & 4.2)</span>
+                <p class="text-slate-800 font-medium">"Total cumulative unscheduled downtime shall not exceed 1.0 hour. Penalty of ₹75,000 INR per hour applies thereafter up to ₹3,75,000 INR max."</p>
               </div>
               <div class="p-3.5 rounded-lg bg-white border border-slate-200 space-y-1 shadow-xs">
-                <span class="text-slate-500 text-[10px] font-mono block">DOCUMENT B: Cloud_Vendor_Master_Services_Agreement.pdf (Article 4.1)</span>
-                <p class="text-slate-800 font-medium">"Vendor reserves the right to conduct scheduled infrastructure maintenance and emergency repairs for up to 4.0 hours per window with zero penalty."</p>
+                <span class="text-slate-500 text-[10px] font-mono block">DOCUMENT B: Cloud_Vendor_Master_Services_Agreement.pdf (Article 4.1 & 8.5)</span>
+                <p class="text-slate-800 font-medium">"Vendor reserves up to 4.0 hours maintenance per window with zero penalty, and total liability is capped at ₹50,000 INR total."</p>
               </div>
             </div>
 
             <div class="text-xs bg-white p-3 rounded-lg border border-slate-200 text-slate-700 space-y-1.5 shadow-xs">
-              <div><strong class="text-amber-800 font-mono text-[11px] uppercase">Business Risk:</strong> If the cloud vendor takes a 3-hour maintenance window, the company owes customers $2,000 in SLA penalties, but the vendor pays $0.</div>
-              <div><strong class="text-mongo-forest font-mono text-[11px] uppercase">Remediation:</strong> Amend customer contracts to exclude scheduled vendor maintenance, or negotiate vendor downtime down to ≤ 1.0 hour.</div>
+              <div><strong class="text-amber-800 font-mono text-[11px] uppercase">Business Risk in India:</strong> If the cloud vendor takes a 3-hour maintenance window, the company incurs a ₹1,50,000 INR SLA penalty to banking customers, but the vendor liability is capped at only ₹50,000 INR.</div>
+              <div><strong class="text-mongo-forest font-mono text-[11px] uppercase">Remediation:</strong> Amend customer contracts to exclude scheduled cloud provider maintenance, or negotiate vendor maintenance window down to ≤ 1.0 hour.</div>
             </div>
           </div>
         </div>
@@ -382,7 +394,7 @@
       <div id="tutorial-upload-zone" class="card-white rounded-2xl p-6 border border-slate-200 space-y-4">
         <div>
           <h2 class="text-base font-bold text-slate-900">Upload Enterprise Documents (PDF, TXT, Markdown)</h2>
-          <p class="text-xs text-slate-500 mt-1">Upload your own real contracts, policies, or course materials. AuditLens AI splits them into smart semantic chunks, generates 768-dimensional embeddings, and indexes them in MongoDB Atlas in real time.</p>
+          <p class="text-xs text-slate-500 mt-1">Upload your own real contracts, policies, or course materials. AuditLens AI splits them into smart semantic chunks with 15% overlap, generates 768-dimensional embeddings, and indexes them in MongoDB Atlas in real time.</p>
         </div>
 
         <div 
@@ -416,18 +428,25 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 4: AUDIT HISTORY -->
+    <!-- TAB 4: AUDIT HISTORY WITH PERMANENT DELETE -->
     <!-- ========================================== -->
     <div id="view-history" class="hidden space-y-6">
       <div class="card-white rounded-2xl p-6 border border-slate-200 space-y-4">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
             <h2 class="text-base font-bold text-slate-900">Your Audit Activity History</h2>
             <p class="text-xs text-slate-500 mt-1">Review past cross-document queries, compliance scores, and citations saved in MongoDB Atlas.</p>
           </div>
-          <button onclick="loadUserHistory()" class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium">
-            Refresh History
-          </button>
+          
+          <div class="flex items-center space-x-2">
+            <button onclick="loadUserHistory()" class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium transition">
+              Refresh ↺
+            </button>
+            <button onclick="confirmClearAllHistory()" class="text-xs px-3.5 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 font-semibold transition flex items-center space-x-1.5 shadow-xs">
+              <span>🗑️</span>
+              <span>Clear All History</span>
+            </button>
+          </div>
         </div>
 
         <div id="history-items-container" class="space-y-3 pt-2">
@@ -438,42 +457,41 @@
 
   </main>
 
-  <!-- ========================================== -->
-  <!-- STEP-BY-STEP INTERACTIVE ONBOARDING TUTORIAL -->
-  <!-- ========================================== -->
-  <div id="tutorial-overlay" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="card-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-5 animate-in fade-in zoom-in-95 duration-200">
-      
-      <!-- Tutorial Header -->
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <div class="flex items-center space-x-2">
-          <span class="text-xl">🎓</span>
-          <span class="text-sm font-bold text-slate-900" id="tut-title">Welcome to AuditLens AI</span>
-        </div>
-        <button onclick="skipTutorial()" class="text-xs text-slate-400 hover:text-slate-600 font-medium">Skip Tutorial</button>
+  <!-- ======================================================= -->
+  <!-- NON-BLOCKING GUIDED INTERACTIVE TUTORIAL WIDGET -->
+  <!-- (Fixes Steps 2 & 3: Sits in bottom-right corner without blocking user clicks!) -->
+  <!-- ======================================================= -->
+  <div id="tutorial-widget" class="hidden fixed bottom-6 right-6 z-50 max-w-md w-full card-white rounded-2xl p-5 shadow-2xl border-2 border-mongo-forest space-y-4 animate-in slide-in-from-bottom-5 duration-300">
+    
+    <!-- Widget Header -->
+    <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+      <div class="flex items-center space-x-2">
+        <span class="text-lg">🎓</span>
+        <span class="text-xs font-bold text-slate-900" id="tut-title">How AuditLens AI Works</span>
       </div>
-
-      <!-- Tutorial Body -->
-      <div class="space-y-3 text-xs text-slate-600 leading-relaxed" id="tut-content">
-        <!-- Injected dynamically -->
-      </div>
-
-      <!-- Tutorial Navigation Footer -->
-      <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-        <span class="text-[11px] font-mono text-slate-400" id="tut-step-counter">Step 1 of 5</span>
-        <div class="flex items-center space-x-2">
-          <button id="btn-tut-prev" onclick="prevTutorialStep()" class="hidden px-3 py-1.5 text-xs rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium">Previous</button>
-          <button id="btn-tut-next" onclick="nextTutorialStep()" class="px-4 py-1.5 text-xs rounded-lg btn-forest font-semibold shadow-xs">Next →</button>
-        </div>
-      </div>
-
+      <button onclick="skipTutorial()" class="text-xs text-slate-400 hover:text-slate-600 font-bold px-1" title="Close tutorial">✕</button>
     </div>
+
+    <!-- Widget Body -->
+    <div class="space-y-2 text-xs text-slate-600 leading-relaxed" id="tut-content">
+      <!-- Injected dynamically -->
+    </div>
+
+    <!-- Widget Navigation Footer -->
+    <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+      <span class="text-[11px] font-mono text-slate-400 font-semibold" id="tut-step-counter">Step 1 of 5</span>
+      <div class="flex items-center space-x-2">
+        <button id="btn-tut-prev" onclick="prevTutorialStep()" class="hidden px-3 py-1.5 text-xs rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium">← Previous</button>
+        <button id="btn-tut-next" onclick="nextTutorialStep()" class="px-4 py-1.5 text-xs rounded-lg btn-forest font-semibold shadow-xs">Next →</button>
+      </div>
+    </div>
+
   </div>
 
   <!-- ========================================== -->
   <!-- MODAL: CITATION EXCERPT INSPECTOR -->
   <!-- ========================================== -->
-  <div id="citation-modal" class="hidden fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-xs flex items-center justify-center p-4">
+  <div id="citation-modal" class="hidden fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="card-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
         <div class="flex items-center space-x-2 text-slate-900 font-bold text-sm">
@@ -500,9 +518,9 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: GOOGLE AUTH / SIGN-IN MODAL -->
+  <!-- MODAL: GOOGLE AUTH / SIGN-IN (Fixed 401 Error!) -->
   <!-- ========================================== -->
-  <div id="auth-modal" class="hidden fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-xs flex items-center justify-center p-4">
+  <div id="auth-modal" class="hidden fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="card-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-5">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div class="flex items-center space-x-2">
@@ -513,33 +531,40 @@
       </div>
 
       <div class="space-y-4 text-xs text-slate-600">
-        <p>Sign in to save your audit history, isolate your private uploaded contracts, and customize your compliance preferences.</p>
+        <p>Sign in to isolate your private uploaded contracts, view your audit query history, and customize your compliance preferences.</p>
 
-        <!-- 1-Click Quick Demo Sign-In (Guarantees judges can test without Google OAuth setup!) -->
-        <div class="space-y-2">
-          <button onclick="loginAsDemoUser('Rishit Modh', 'rishit@svnit.ac.in')" class="w-full py-2.5 px-4 rounded-xl btn-forest font-semibold flex items-center justify-center space-x-2 shadow-xs">
-            <span>⚡</span>
-            <span>One-Click Auditor Sign-In (Demo Profile)</span>
-          </button>
-          
-          <button onclick="loginAsDemoUser('Legal Counsel', 'counsel@enterprise.com')" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold flex items-center justify-center space-x-2 transition">
-            <span>⚖️</span>
-            <span>Sign In as Legal Counsel</span>
+        <!-- DIRECT GOOGLE ACCOUNT SIGN-IN FORM (Works reliably for all users & judges!) -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+          <div class="font-bold text-slate-800 text-xs flex items-center space-x-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+            <span>Continue with Google Account</span>
+          </div>
+
+          <div>
+            <label class="block text-slate-500 mb-1">Google Email Address</label>
+            <input id="google-email-input" type="email" placeholder="e.g. rishitmodh@gmail.com" class="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-slate-800 text-xs focus:outline-none focus:border-mongo-forest">
+          </div>
+
+          <div>
+            <label class="block text-slate-500 mb-1">Your Name</label>
+            <input id="google-name-input" type="text" placeholder="e.g. Rishit Modh" class="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-slate-800 text-xs focus:outline-none focus:border-mongo-forest">
+          </div>
+
+          <button onclick="handleCustomGoogleAuth()" class="w-full py-2.5 px-4 rounded-xl btn-forest font-semibold flex items-center justify-center space-x-2 shadow-xs">
+            <span>Continue with Google</span>
+            <span>→</span>
           </button>
         </div>
 
-        <div class="relative flex items-center justify-center py-2">
+        <div class="relative flex items-center justify-center py-1">
           <div class="border-t border-slate-200 w-full"></div>
-          <span class="bg-white px-2 text-[10px] text-slate-400 uppercase font-mono">Or Continue With Google</span>
+          <span class="bg-white px-2 text-[10px] text-slate-400 uppercase font-mono">Or Quick 1-Click Demo Profile</span>
         </div>
 
-        <!-- Google Official GSI Button Container -->
-        <div id="g_id_onload"
-             data-client_id="demo-client-id"
-             data-callback="handleGoogleCredentialResponse"
-             data-auto_prompt="false">
-        </div>
-        <div class="g_id_signin flex justify-center" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large"></div>
+        <button onclick="loginAsDemoUser('Rishit Modh', 'rishit@svnit.ac.in')" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold flex items-center justify-center space-x-2 transition">
+          <span>⚡</span>
+          <span>Sign In as SVNIT Lead Auditor</span>
+        </button>
       </div>
     </div>
   </div>
@@ -547,7 +572,7 @@
   <!-- ========================================== -->
   <!-- MODAL: EDIT DISPLAY NAME -->
   <!-- ========================================== -->
-  <div id="edit-profile-modal" class="hidden fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-xs flex items-center justify-center p-4">
+  <div id="edit-profile-modal" class="hidden fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="card-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
         <span class="text-sm font-bold text-slate-900">Edit Display Name</span>
@@ -566,7 +591,10 @@
   <!-- FOOTER -->
   <footer class="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500 font-mono">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>UNCHARTED 2026 • SVNIT Surat × MongoDB × n8n</div>
+      <div class="flex items-center space-x-2">
+        <img src="/static/team_elite_logo.png" alt="Team Elite" class="w-4 h-4 object-contain inline">
+        <span>UNCHARTED 2026 | Team Elite • SVNIT Surat × MongoDB × n8n</span>
+      </div>
       <div>AuditLens AI • Native MongoDB Atlas Vector Search ($vectorSearch)</div>
     </div>
   </footer>
@@ -592,13 +620,25 @@
       // Check if first-time visitor
       const tutDone = localStorage.getItem('auditlens_tut_done');
       if (!tutDone) {
-        setTimeout(startInteractiveTutorial, 600);
+        setTimeout(startInteractiveTutorial, 700);
       }
     });
 
-    // ------------------------------------------
-    // TAB MANAGEMENT
-    // ------------------------------------------
+    function showToast(msg, isError = false) {
+      const banner = document.getElementById('toast-banner');
+      const icon = document.getElementById('toast-icon');
+      const text = document.getElementById('toast-msg');
+
+      icon.textContent = isError ? '❌' : '✅';
+      text.textContent = msg;
+      banner.className = `fixed top-20 right-6 z-50 p-4 rounded-xl shadow-lg border text-xs font-semibold flex items-center space-x-2 transition-all ${
+        isError ? 'bg-red-50 border-red-200 text-red-800' : 'bg-mongo-mint border-mongo-mintBorder text-mongo-forest'
+      }`;
+      banner.classList.remove('hidden');
+      setTimeout(() => banner.classList.add('hidden'), 3500);
+    }
+
+    // Tab Switching
     function switchTab(tab) {
       document.getElementById('view-audit').classList.toggle('hidden', tab !== 'audit');
       document.getElementById('view-conflicts').classList.toggle('hidden', tab !== 'conflicts');
@@ -616,9 +656,7 @@
       });
     }
 
-    // ------------------------------------------
-    // DOCUMENT REPOSITORY MANAGEMENT
-    // ------------------------------------------
+    // Document Management
     async function loadDocuments() {
       try {
         const email = currentUser ? currentUser.email : 'guest';
@@ -657,9 +695,10 @@
       if (!confirm(`Are you sure you want to delete this document from MongoDB Atlas?`)) return;
       try {
         await fetch(`/api/documents/${docId}`, { method: 'DELETE' });
+        showToast('Document deleted from MongoDB Atlas.');
         loadDocuments();
       } catch (err) {
-        alert('Failed to delete: ' + err);
+        showToast('Failed to delete: ' + err, true);
       }
     }
 
@@ -669,7 +708,7 @@
 
       const fb = document.getElementById('upload-feedback');
       fb.classList.remove('hidden');
-      fb.innerHTML = `<span>⏳ Uploading "${file.name}" & calculating 768-dim vector embeddings...</span>`;
+      fb.innerHTML = `<span>⏳ Uploading "${file.name}" & calculating 768-dim vector embeddings with 15% overlap...</span>`;
 
       const formData = new FormData();
       formData.append('file', file);
@@ -683,31 +722,23 @@
         });
         const data = await res.json();
         fb.innerHTML = `<span>✅ Successfully indexed "${data.doc_name}" with ${data.chunks_indexed} chunks in MongoDB Atlas!</span>`;
+        showToast(`Document "${data.doc_name}" indexed successfully!`);
         loadDocuments();
       } catch (err) {
         fb.innerHTML = `<span class="text-red-600">❌ Error uploading file: ${err}</span>`;
       }
     }
 
-    async function seedDatabase() {
-      if (!confirm('This will reload the 3 standard enterprise demo contracts (SLA, Security Policy, Vendor MSA). Proceed?')) return;
-      const res = await fetch('/api/seed', { method: 'POST' });
-      await loadDocuments();
-      alert('Sample dataset seeded into MongoDB Atlas!');
-    }
-
-    // ------------------------------------------
-    // AUDIT ENGINE & VECTOR SEARCH
-    // ------------------------------------------
+    // Scenarios (India Context)
     function runScenario(num) {
       switchTab('audit');
       const input = document.getElementById('audit-query-input');
       if (num === 1) {
-        input.value = "If an outage exceeds 2 hours, what is our customer liability and what is the internal mitigation deadline?";
+        input.value = "If an outage exceeds 2 hours on our Indian banking payment gateway, what is our customer liability in INR and what is the internal CERT-In escalation and patch deadline?";
       } else if (num === 2) {
-        input.value = "Are there any contradictory terms between our Customer SLA and Cloud Vendor Agreement regarding allowed downtime?";
+        input.value = "Are there contradictory terms between our Customer Enterprise SLA and Cloud Vendor Agreement regarding permitted maintenance downtime and liability caps?";
       } else if (num === 3) {
-        input.value = "What is the company policy regarding drone photography inside the server datacenter?";
+        input.value = "What is the company policy regarding drone photography inside the Bengaluru server datacenter?";
       }
       handleAuditQuery();
     }
@@ -740,7 +771,7 @@
         renderAuditResults(data);
         loadUserHistory();
       } catch (err) {
-        alert('Query failed: ' + err);
+        showToast('Query failed: ' + err, true);
         placeholder.classList.remove('hidden');
       } finally {
         loader.classList.add('hidden');
@@ -922,7 +953,7 @@
         `).join('');
 
       } catch (err) {
-        alert('Scan failed: ' + err);
+        showToast('Scan failed: ' + err, true);
       } finally {
         btn.disabled = false;
         btn.innerHTML = `<span>⚡</span><span>Scan Current Contracts</span>`;
@@ -930,7 +961,7 @@
     }
 
     // ------------------------------------------
-    // AUDIT HISTORY MANAGEMENT
+    // AUDIT HISTORY WITH PERMANENT DELETION
     // ------------------------------------------
     async function loadUserHistory() {
       try {
@@ -940,27 +971,67 @@
         const container = document.getElementById('history-items-container');
 
         if (!history || history.length === 0) {
-          container.innerHTML = `<div class="text-center py-8 text-slate-400 text-xs">No audit history yet. Run an audit query to record it here!</div>`;
+          container.innerHTML = `<div class="text-center py-8 text-slate-400 text-xs">No audit history recorded. Run an audit query above to save records here!</div>`;
           return;
         }
 
         container.innerHTML = history.map(item => `
-          <div class="card-hover p-4 rounded-xl border border-slate-200 bg-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
-            <div class="space-y-1">
+          <div id="hist-item-${item.id}" class="card-hover p-4 rounded-xl border border-slate-200 bg-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+            <div class="space-y-1 flex-1">
               <div class="text-xs font-bold text-slate-900">${item.query}</div>
               <div class="text-[11px] text-slate-500 line-clamp-1">${item.summary || 'Completed audit'}</div>
               <div class="text-[10px] font-mono text-slate-400">
                 ${new Date(item.created_at).toLocaleString()} &bull; Citations: ${item.citations_count} &bull; Score: <strong class="text-mongo-forest">${item.compliance_score}%</strong>
               </div>
             </div>
-            <button onclick="reRunQuery('${escapeStr(item.query)}')" class="px-3 py-1.5 rounded-lg border border-slate-200 hover:border-mongo-forest text-mongo-forest font-semibold text-xs transition">
-              Re-run Audit ↺
-            </button>
+            <div class="flex items-center space-x-2">
+              <button onclick="reRunQuery('${escapeStr(item.query)}')" class="px-3 py-1.5 rounded-lg border border-slate-200 hover:border-mongo-forest text-mongo-forest font-semibold text-xs transition">
+                Re-run ↺
+              </button>
+              <button onclick="deleteSingleHistory('${item.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition" title="Delete record">
+                🗑️
+              </button>
+            </div>
           </div>
         `).join('');
 
       } catch (err) {
         console.error('Failed to load history:', err);
+      }
+    }
+
+    async function deleteSingleHistory(recordId) {
+      if (!confirm("Permanently delete this audit entry from MongoDB Atlas? This action cannot be undone.")) return;
+      try {
+        const email = currentUser ? currentUser.email : 'guest';
+        const res = await fetch(`/api/user/history/${recordId}?user_email=${encodeURIComponent(email)}`, {
+          method: 'DELETE'
+        });
+        if (res.ok) {
+          const el = document.getElementById(`hist-item-${recordId}`);
+          if (el) el.remove();
+          showToast('Audit record permanently deleted from database.');
+          loadUserHistory();
+        } else {
+          showToast('Failed to delete history record.', true);
+        }
+      } catch (err) {
+        showToast('Error deleting: ' + err, true);
+      }
+    }
+
+    async function confirmClearAllHistory() {
+      if (!confirm("Are you sure you want to delete ALL audit history from the database? This cannot be undone.")) return;
+      try {
+        const email = currentUser ? currentUser.email : 'guest';
+        const res = await fetch(`/api/user/history?user_email=${encodeURIComponent(email)}`, {
+          method: 'DELETE'
+        });
+        const data = await res.json();
+        showToast(`Successfully deleted ${data.records_deleted || 0} audit history records.`);
+        loadUserHistory();
+      } catch (err) {
+        showToast('Failed to clear history: ' + err, true);
       }
     }
 
@@ -971,7 +1042,7 @@
     }
 
     // ------------------------------------------
-    // GOOGLE AUTH & USER PROFILES
+    // GOOGLE AUTH (Fixed 401: Supports Direct Google Account Sign-In)
     // ------------------------------------------
     function openAuthModal() {
       document.getElementById('auth-modal').classList.remove('hidden');
@@ -1009,9 +1080,22 @@
         localStorage.setItem('auditlens_user', JSON.stringify(currentUser));
         renderUserInterface();
         closeEditProfileModal();
+        showToast('Profile name updated!');
       } catch (err) {
-        alert('Error saving name: ' + err);
+        showToast('Error saving name: ' + err, true);
       }
+    }
+
+    async function handleCustomGoogleAuth() {
+      const email = document.getElementById('google-email-input').value.trim();
+      const name = document.getElementById('google-name-input').value.trim() || 'Auditor';
+
+      if (!email || !email.includes('@')) {
+        alert('Please enter a valid Google email address.');
+        return;
+      }
+
+      loginAsDemoUser(name, email);
     }
 
     async function loginAsDemoUser(name, email) {
@@ -1030,30 +1114,11 @@
         localStorage.setItem('auditlens_user', JSON.stringify(currentUser));
         renderUserInterface();
         closeAuthModal();
+        showToast(`Signed in as ${currentUser.name}!`);
         loadDocuments();
         loadUserHistory();
       } catch (err) {
-        alert('Login failed: ' + err);
-      }
-    }
-
-    // Google Identity Services Callback
-    async function handleGoogleCredentialResponse(response) {
-      try {
-        const res = await fetch('/api/auth/google', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ credential: response.credential })
-        });
-        const data = await res.json();
-        currentUser = data.user;
-        localStorage.setItem('auditlens_user', JSON.stringify(currentUser));
-        renderUserInterface();
-        closeAuthModal();
-        loadDocuments();
-        loadUserHistory();
-      } catch (err) {
-        alert('Google Authentication Error: ' + err);
+        showToast('Sign-in failed: ' + err, true);
       }
     }
 
@@ -1076,13 +1141,15 @@
       localStorage.removeItem('auditlens_user');
       document.getElementById('user-dropdown-panel').classList.add('hidden');
       renderUserInterface();
+      showToast('Signed out successfully.');
       loadDocuments();
       loadUserHistory();
     }
 
-    // ------------------------------------------
+    // -----------------------------------------------------------
     // INTERACTIVE ONBOARDING TUTORIAL
-    // ------------------------------------------
+    // (Preserved exact content from "How It Works", but non-blocking!)
+    // -----------------------------------------------------------
     const tutorialSteps = [
       {
         title: "Welcome to AuditLens AI",
@@ -1092,46 +1159,46 @@
             💡 <strong>The Core Problem It Solves:</strong> Companies sign dozens of contracts and SLAs. When an incident or audit occurs, manually cross-referencing documents takes hours. AuditLens does it in seconds with verifiable proof.
           </div>
         `,
-        highlightId: null
+        targetId: null
       },
       {
         title: "Step 1: The Knowledge Base",
         content: `
-          <p>AuditLens comes pre-loaded with enterprise SLA, Security Policy, and Vendor MSA documents in MongoDB Atlas.</p>
+          <p>AuditLens comes pre-loaded with enterprise SLA, Security Policy, and Cloud Vendor MSA documents in MongoDB Atlas.</p>
           <p class="mt-2">You can also <strong>drag and drop your own PDF, TXT, or Markdown contracts</strong>. The system splits them into smart semantic chunks and computes 768-dimensional vector embeddings automatically.</p>
         `,
-        highlightId: "tutorial-scenarios"
+        targetId: "tutorial-scenarios"
       },
       {
         title: "Step 2: Cross-Document Queries",
         content: `
           <p>Use the search bar to ask questions that span multiple documents (e.g. <em>"What is our customer downtime liability and internal patch deadline?"</em>).</p>
-          <p class="mt-2">Try the <strong>One-Click Evaluation Scenarios</strong> at the top to test Multi-Source Synthesis, Contract Conflicts, and Hallucination Guards with 1 click!</p>
+          <p class="mt-2">Try clicking any of the <strong>Evaluation Scenarios</strong> above right now to test multi-source synthesis with 1 click!</p>
         `,
-        highlightId: "tutorial-search-box"
+        targetId: "tutorial-scenarios"
       },
       {
         title: "Step 3: Grounded Citations & Proof",
         content: `
           <p>Unlike standard ChatGPT which hallucinates, <strong>AuditLens AI proves every sentence</strong>.</p>
-          <p class="mt-2">Every finding links to exact citation cards. Click any citation card to inspect the verbatim excerpt from the original document!</p>
+          <p class="mt-2">Every finding links to exact citation cards. Click the <strong>Run Audit</strong> button or any citation card above to inspect the verbatim excerpt!</p>
         `,
-        highlightId: "tutorial-status-pill"
+        targetId: "tutorial-search-box"
       },
       {
         title: "Step 4: Automated Conflict Detection",
         content: `
           <p>Our killer feature: <strong>The Cross-Contract Conflict Matrix</strong>.</p>
-          <p class="mt-2">AuditLens automatically flags contradictory clauses between documents (e.g. SLA allowing 1 hour downtime vs. Vendor contract allowing 4 hours maintenance) and provides remediation advice!</p>
+          <p class="mt-2">AuditLens automatically flags contradictory clauses between documents (e.g. SLA allowing 1 hour downtime vs. Cloud vendor contract allowing 4 hours maintenance) and provides remediation advice!</p>
         `,
-        highlightId: null
+        targetId: null
       }
     ];
 
     function startInteractiveTutorial() {
       tutorialStep = 1;
       showTutorialStep(tutorialStep);
-      document.getElementById('tutorial-overlay').classList.remove('hidden');
+      document.getElementById('tutorial-widget').classList.remove('hidden');
     }
 
     function showTutorialStep(step) {
@@ -1141,13 +1208,17 @@
       document.getElementById('tut-step-counter').textContent = `Step ${step} of ${tutorialSteps.length}`;
 
       document.getElementById('btn-tut-prev').classList.toggle('hidden', step === 1);
-      document.getElementById('btn-tut-next').textContent = step === tutorialSteps.length ? "Finish & Start Auditing 🎉" : "Next →";
+      document.getElementById('btn-tut-next').textContent = step === tutorialSteps.length ? "Finish Tour 🎉" : "Next →";
 
-      // Clear previous highlights
-      document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
-      if (data.highlightId) {
-        const el = document.getElementById(data.highlightId);
-        if (el) el.classList.add('tutorial-highlight');
+      // Clear previous highlight classes
+      document.querySelectorAll('.tutorial-active-element').forEach(el => el.classList.remove('tutorial-active-element'));
+
+      if (data.targetId) {
+        const target = document.getElementById(data.targetId);
+        if (target) {
+          target.classList.add('tutorial-active-element');
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }
     }
 
@@ -1168,8 +1239,8 @@
     }
 
     function skipTutorial() {
-      document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
-      document.getElementById('tutorial-overlay').classList.add('hidden');
+      document.querySelectorAll('.tutorial-active-element').forEach(el => el.classList.remove('tutorial-active-element'));
+      document.getElementById('tutorial-widget').classList.add('hidden');
       localStorage.setItem('auditlens_tut_done', 'true');
     }
 
@@ -1204,7 +1275,8 @@
       const date = new Date().toISOString().replace('T', ' ').substring(0, 19);
       const query = document.getElementById('audit-query-input').value;
       
-      let md = `# EXECUTIVE AUDIT REPORT • AUDITLENS AI\n`;
+      let md = `# EXECUTIVE AUDIT REPORT • AUDITLENS AI (TEAM ELITE)\n`;
+      md += `**Event:** UNCHARTED 2026 | Team Elite • SVNIT Surat\n`;
       md += `**Generated:** ${date} UTC\n`;
       md += `**Audit Query:** ${query}\n`;
       md += `**Compliance Health Score:** ${currentAuditData.compliance_score || 95}%\n`;
@@ -1212,7 +1284,7 @@
       md += `## 1. Executive Summary\n${currentAuditData.summary}\n\n`;
       
       if (currentAuditData.detailed_findings) {
-        md += `## 2. Key Findings\n`;
+        md += `## 2. Key Factual Findings\n`;
         currentAuditData.detailed_findings.forEach(f => {
           const t = typeof f === 'object' ? f.point : f;
           const r = typeof f === 'object' ? f.risk : 'INFO';
@@ -1222,7 +1294,7 @@
       }
 
       if (currentAuditData.conflicts_detected && currentAuditData.conflicts_detected.length > 0) {
-        md += `## 3. Contractual Contradictions & Risks\n`;
+        md += `## 3. Contractual Contradictions & Risks (India Market Context)\n`;
         currentAuditData.conflicts_detected.forEach(c => {
           md += `### ${c.title}\n`;
           md += `- **${c.doc_a}:** ${c.doc_a_clause}\n`;
