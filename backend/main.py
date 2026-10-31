@@ -1,22 +1,29 @@
 import os
 import sys
+import json
 from typing import Dict, Any, Optional
-from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form
+from datetime import datetime
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from backend.database import db
-from backend.rag_engine import seed_database, query_rag_engine, get_embedding, process_and_index_file
+from backend.rag_engine import (
+    seed_database, 
+    query_rag_engine, 
+    get_embedding, 
+    process_and_index_file,
+    scan_all_contract_conflicts
+)
 
 app = FastAPI(
     title="AuditLens AI - Enterprise Policy & Contract Intelligence RAG Engine",
     description="Track 2: RAG Engine with MongoDB Atlas Vector Search and Gemini",
-    version="2.0.0"
+    version="3.0.0"
 )
 
-# Enable CORS for web clients
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -28,12 +35,17 @@ app.add_middleware(
 class QueryRequest(BaseModel):
     query: str
     limit: Optional[int] = 5
+    user_email: Optional[str] = "guest"
 
-class CustomDocRequest(BaseModel):
-    doc_name: str
-    category: str
-    section: str
-    text: str
+class GoogleAuthRequest(BaseModel):
+    credential: Optional[str] = None
+    email: Optional[str] = None
+    name: Optional[str] = None
+    picture: Optional[str] = None
+
+class ProfileUpdateRequest(BaseModel):
+    email: str
+    display_name: str
 
 @app.get("/api/health")
 def health_check():
@@ -65,9 +77,9 @@ def seed_demo_data():
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/documents")
-def list_documents():
-    """Retrieve all indexed documents in MongoDB."""
-    return db.get_all_documents()
+def list_documents(user_email: Optional[str] = None):
+    """Retrieve indexed documents in MongoDB."""
+    return db.get_all_documents(user_id=user_email)
 
 @app.delete("/api/documents/{doc_id}")
 def delete_document(doc_id: str):
@@ -81,12 +93,13 @@ def delete_document(doc_id: str):
 @app.post("/api/upload_file")
 async def upload_file(
     file: UploadFile = File(...),
-    category: str = Form("User Upload")
+    category: str = Form("User Upload"),
+    user_email: str = Form("guest")
 ):
-    """Upload PDF, TXT, or Markdown documents, chunk them, and store in MongoDB Vector Search."""
+    """Upload PDF, TXT, or Markdown documents, chunk them with 15% overlap, and store in MongoDB Vector Search."""
     try:
         file_bytes = await file.read()
-        res = process_and_index_file(file_bytes, file.filename, category, db)
+        res = process_and_index_file(file_bytes, file.filename, category, db, user_id=user_email)
         return res
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -97,28 +110,85 @@ def run_audit_query(req: QueryRequest):
     if not req.query.strip():
         raise HTTPException(status_code=400, detail="Query cannot be empty.")
     try:
-        response = query_rag_engine(req.query, db, limit=req.limit)
+        response = query_rag_engine(req.query, db, limit=req.limit, user_id=req.user_email)
+        
+        # Save to MongoDB Atlas audit history
+        history_record = {
+            "user_email": req.user_email or "guest",
+            "query": req.query,
+            "summary": response.get("summary"),
+            "compliance_score": response.get("compliance_score", 95),
+            "citations_count": len(response.get("citations", [])),
+            "conflicts_count": len(response.get("conflicts_detected", [])),
+            "created_at": datetime.utcnow().isoformat()
+        }
+        db.save_audit_history(history_record)
+
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/api/add_document")
-def add_custom_document(req: CustomDocRequest):
-    """Add a custom document chunk, generate embedding, and store in MongoDB."""
+@app.get("/api/conflicts/scan")
+def scan_conflicts():
+    """Dynamically scan all documents currently stored in MongoDB Atlas for contractual contradictions."""
     try:
-        full_text = f"{req.doc_name} - {req.section}: {req.text}"
-        embedding = get_embedding(full_text)
-        chunk = {
-            "chunk_id": f"chunk_custom_{os.urandom(4).hex()}",
-            "doc_id": req.doc_name.lower().replace(" ", "_"),
-            "doc_name": req.doc_name,
-            "category": req.category,
-            "section": req.section,
-            "text": req.text,
-            "embedding": embedding
+        conflicts = scan_all_contract_conflicts(db)
+        return {"conflicts": conflicts, "total_found": len(conflicts)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/user/history")
+def get_audit_history(user_email: Optional[str] = "guest"):
+    """Retrieve saved audit history from MongoDB Atlas."""
+    return db.get_user_history(user_email=user_email, limit=10)
+
+# GOOGLE AUTH & USER PROFILE ENDPOINTS
+@app.post("/api/auth/google")
+def auth_google(req: GoogleAuthRequest):
+    """
+    Authenticate user via Google OAuth credential or demo profile.
+    Decodes Google JWT or accepts profile payload and stores in MongoDB 'users'.
+    """
+    try:
+        email = req.email
+        name = req.name or "Auditor"
+        picture = req.picture or "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80"
+
+        # If standard Google JWT credential token is provided, decode payload
+        if req.credential and not email:
+            import base64
+            parts = req.credential.split(".")
+            if len(parts) >= 2:
+                # Add padding if needed
+                padded = parts[1] + "=" * ((4 - len(parts[1]) % 4) % 4)
+                decoded = json.loads(base64.urlsafe_b64decode(padded).decode("utf-8"))
+                email = decoded.get("email")
+                name = decoded.get("name", name)
+                picture = decoded.get("picture", picture)
+
+        if not email:
+            raise HTTPException(status_code=400, detail="Invalid Google authentication payload.")
+
+        user_profile = {
+            "email": email,
+            "name": name,
+            "picture": picture,
+            "role": "Compliance Officer",
+            "last_login": datetime.utcnow().isoformat()
         }
-        db.insert_chunks([chunk])
-        return {"status": "success", "message": f"Added section '{req.section}' to {req.doc_name}"}
+        saved = db.upsert_user(user_profile)
+        return {"status": "success", "user": saved}
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Authentication failed: {str(e)}")
+
+@app.post("/api/user/profile")
+def update_profile(req: ProfileUpdateRequest):
+    """Update user's custom display name in MongoDB Atlas."""
+    try:
+        db.update_user_preferences(req.email, {"name": req.display_name})
+        user = db.get_user(req.email)
+        return {"status": "success", "user": user}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
