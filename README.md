@@ -214,7 +214,6 @@ All in-depth documentation is organized inside the [`docs/`](docs/) directory:
 ### Presentation Deliverables
 - 📊 [**Editable Presentation Deck (`AuditLens_AI_Team_Elite_Deck.pptx`)**](presentation/AuditLens_AI_Team_Elite_Deck.pptx) — Exactly 8 slides with custom MongoDB styling.
 - 📄 [**Presentation Deck PDF (`AuditLens_AI_Team_Elite_Deck.pdf`)**](presentation/AuditLens_AI_Team_Elite_Deck.pdf) — High-resolution 16:9 PDF deck ready for judges.
-- 📝 [**Slide-by-Slide Content & Speaker Notes (`SLIDE_DECK_CONTENT.md`)**](presentation/SLIDE_DECK_CONTENT.md) — Copy-ready talking points and speaker notes for all 8 slides.
 
 ---
 
