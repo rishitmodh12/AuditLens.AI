@@ -673,8 +673,26 @@
 
       // Check if first-time visitor
       const tutDone = localStorage.getItem('auditlens_tut_done');
-      if (!tutDone) {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('notut') === '1') {
+        localStorage.setItem('auditlens_tut_done', 'true');
+      } else if (!tutDone) {
         setTimeout(startInteractiveTutorial, 700);
+      }
+
+      // URL Direct Routing & Screenshot Helpers
+      if (urlParams.get('tab') === 'conflicts') {
+        switchTab('conflicts');
+      } else if (urlParams.get('tab') === 'documents') {
+        switchTab('documents');
+      } else if (urlParams.get('tab') === 'history') {
+        switchTab('history');
+      } else if (urlParams.get('scenario') === '1') {
+        setTimeout(() => runScenario(1), 500);
+      } else if (urlParams.get('benchmark') === '1') {
+        setTimeout(openBenchmarkModal, 300);
+      } else if (urlParams.get('login') === '1') {
+        setTimeout(openProfileModal, 300);
       }
     });
 

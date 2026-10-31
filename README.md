@@ -1,74 +1,130 @@
-# 🔍 AuditLens AI — Enterprise Policy & Contract Intelligence RAG Engine
+# 🔍 AuditLens AI — Enterprise Contract & Policy Intelligence RAG Engine
 
-> **Built for UNCHARTED 2026 Hackathon (Track 2: RAG Engine)**  
-> **Team:** Team Elite — SVNIT Surat  
-> **Organized by:** NEXUS — Official DoCSE & DoAI Cell, SVNIT Surat × **MongoDB** × **n8n**  
-> **Live Deployment:** [https://auditlens-ai-13xs.onrender.com](https://auditlens-ai-13xs.onrender.com)  
-> **Repository:** [https://github.com/rishitmodh12/AuditLens.AI](https://github.com/rishitmodh12/AuditLens.AI)
+[![Track 2: RAG Engine](https://img.shields.io/badge/UNCHARTED_2026-Track_2:_RAG_Engine-00ED64?style=for-the-badge&logo=mongodb&logoColor=001E2B)](https://auditlens-ai-13xs.onrender.com)
+[![Live Deployment](https://img.shields.io/badge/Live_Deployment-Render_Active-10B981?style=for-the-badge&logo=render&logoColor=white)](https://auditlens-ai-13xs.onrender.com)
+[![Benchmark](https://img.shields.io/badge/Recall@1-100%25-00684A?style=for-the-badge)](https://auditlens-ai-13xs.onrender.com/api/evaluate)
+[![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas_$vectorSearch-00ED64?style=for-the-badge&logo=mongodb&logoColor=001E2B)](https://cloud.mongodb.com/)
+
+> **Event:** UNCHARTED 2026 Hackathon (30 Oct – 1 Nov 2026)  
+> **Organizer:** NEXUS — Official DoCSE & DoAI Cell, SVNIT Surat × **MongoDB** × **n8n**  
+> **Track:** Track 2 — RAG Engine  
+> **Team Name:** Team Elite (SVNIT Surat)  
+> **Team Members:** Rishit Modh • Bhavya Juneja • Sugandh Jha  
+> **Live Production URL:** [https://auditlens-ai-13xs.onrender.com](https://auditlens-ai-13xs.onrender.com)  
+> **GitHub Repository:** [https://github.com/rishitmodh12/AuditLens.AI](https://github.com/rishitmodh12/AuditLens.AI)
+
+---
+
+## 📑 Table of Contents
+- [🌟 Executive Summary](#-executive-summary)
+- [🎯 Track 2 Challenge Fit](#-track-2-challenge-fit)
+- [🖼️ Application Screenshots](#️-application-screenshots)
+- [🏗️ System Architecture](#️-system-architecture)
+- [🔬 Native Hybrid Search (70/30 Fusion)](#-native-hybrid-search-7030-fusion)
+- [📊 Empirical Evaluation Benchmark (100% Recall)](#-empirical-evaluation-benchmark-100-recall)
+- [🇮🇳 Indian Enterprise & Regulatory Context](#-indian-enterprise--regulatory-context)
+- [⚡ Quick Start & Installation](#-quick-start--installation)
+- [📚 Complete Documentation Index](#-complete-documentation-index)
+- [👥 Team Elite Contributions](#-team-elite-contributions)
 
 ---
 
 ## 🌟 Executive Summary
 
-**AuditLens AI** is an enterprise-grade cross-document compliance, contract, and Service Level Agreement (SLA) intelligence engine built natively on **MongoDB Atlas Vector Search** (`$vectorSearch`) and **Google Gemini**.
+**AuditLens AI** is an intelligent, cross-document compliance and discrepancy analyzer built for **UNCHARTED 2026 (Track 2: RAG Engine)**. Powered natively by **MongoDB Atlas Vector Search (`$vectorSearch`)**, dense embeddings (`all-mpnet-base-v2`), and exact lexical keyword token matching, AuditLens AI resolves one of the costliest problems in enterprise operations: **silent contractual contradictions**.
 
-When companies sign dozens of vendor agreements, customer SLAs, and regulatory playbooks, cross-referencing obligations during an audit or incident takes hours of manual legal labor. AuditLens AI automates this with mathematical rigor and deep evidentiary proof:
+When organizations sign customer SLAs, upstream cloud provider MSAs, and security incident policies, these agreements frequently contradict one another:
+- Customer SLAs promise **99.9% uptime** (max 1.0 hr downtime/month) with **₹75,000/hr** breach penalties.
+- Upstream cloud vendor contracts allow **4.0-hour** maintenance windows with **zero penalty**.
+- Internal incident response policies require **30-minute CISO escalation**, while statutory **CERT-In directions** mandate **6.0-hour external reporting**.
 
-1. **Native Hybrid Search ($vectorSearch + Lexical Fusion)**: Combines 768-dimensional semantic embeddings with exact lexical keyword matching for clause numbers (e.g. `Section 4.2`, `Clause 3.2`), Indian Rupee penalties (`₹75,000`), and regulatory entities (`CERT-In`, `Sev-1`, `DPDP Act 2023`).
-2. **Multi-Source Evidence Synthesis**: Simultaneously retrieves and synthesizes facts across disparate documents into an actionable executive brief.
-3. **Verbatim Quote Verification (Strict Grounding in Code)**: Every citation returned by the LLM is programmatically checked by the backend server against the raw source chunk in MongoDB Atlas (`quote in chunk_text`). Verified citations are tagged with `🛡️ Verbatim Verified from Atlas Source`.
-4. **Deterministic Compliance Health Score**: Replaces subjective guessing with a traceable mathematical scoring formula:
-   $$\text{Compliance Score} = 100 - (20 \times \text{High Conflicts}) - (10 \times \text{Med Conflicts}) - (10 \times \text{Unverified Quotes})$$
-5. **Threshold-Gated Refusal Guardrails**: Automatically detects and refuses out-of-scope queries (e.g., drone surveillance over data centers) when semantic similarity falls below the confidence threshold, suppressing speculation.
-6. **Cross-Contract Contradiction Detection**: Dynamically inspects all stored contracts in MongoDB Atlas and surfaces direct legal contradictions (e.g., Customer SLA 1.0-hour downtime allowance vs. Vendor 4.0-hour maintenance window; ₹75,000/hr SLA penalty vs. Vendor ₹50,000 liability cap).
+AuditLens AI continuously ingests multi-party contracts, performs cross-document reconciliation, calculates exact outage liabilities, programmatically verifies citations against raw Atlas text, and cleanly refuses out-of-scope requests.
+
+---
+
+## 🎯 Track 2 Challenge Fit
+
+| Track 2 Requirement | Implemented Feature in AuditLens AI | Status |
+|---|---|---|
+| **Focused Document Collection** | Seeded with 3 realistic enterprise agreements (Customer SLA, Vendor MSA, Internal Policy) + instant multi-format upload (PDF, TXT, MD). | ✅ Complete |
+| **Evidence from Multiple Sources** | Concurrently synthesizes cross-document evidence (e.g. SLA §4.2 + Policy §3.2 + MSA §4.1) in a single unified response. | ✅ Complete |
+| **Answer, Compare, or Generate an Artefact** | Generates executive audit summaries, factual findings, cross-contract conflict matrices, and downloadable Markdown audit briefs with IST timestamps. | ✅ Complete |
+| **Source Behind Every Important Result** | Clickable inline citation badges (`[1]`, `[2]`) that smoothly scroll to and highlight verbatim source cards in the UI. | ✅ Complete |
+| **Handle Unanswerable Requests Clearly** | Multi-tiered domain defense that cleanly refuses out-of-scope requests (e.g., commercial drone surveillance over data centers) with zero hallucination. | ✅ Complete |
+| **MongoDB Atlas Vector Search** | Native `$vectorSearch` pipeline indexing 768-dimensional embeddings with cosine similarity and metadata filters. | ✅ Complete |
+| **Hybrid Search for Exact Terms** | 70% dense vector similarity + 30% lexical token matching for exact clause numbers (`§4.2`, `§3.2`), ₹ amounts (`₹75,000`), and regulatory acronyms (`CERT-In`, `DPDP`). | ✅ Complete |
+| **Empirical Evaluation Benchmark** | Live `/api/evaluate` harness testing 8 standardized queries, delivering **100% Recall@1, 100% Recall@3, and 100% Refusal Accuracy**. | ✅ Complete |
+
+---
+
+## 🖼️ Application Screenshots
+
+### 1. Main Dashboard & One-Click Indian Enterprise Scenarios
+![Dashboard](assets/screenshots/01_dashboard.png)
+
+### 2. Multi-Source Synthesis with Verbatim Verified Citations & Reconciled ₹75,000 Penalty
+![Query Results](assets/screenshots/06_query_scenario1.png)
+
+### 3. Empirical Evaluation Benchmark Modal (100% Recall@1 & Safe Refusal)
+![Benchmark Modal](assets/screenshots/04_benchmark_modal_loaded.png)
+
+### 4. Native MongoDB Atlas Vector Search Index Configuration
+![Atlas Index](assets/screenshots/atlas_vector_search_index.png)
 
 ---
 
 ## 🏗️ System Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                          USER BROWSER / EVALUATOR UI                            │
-│  - Modern MongoDB Green & White Theme (Tailwind CSS, Non-Blocking Tour)         │
-│  - One-Click Indian Enterprise Evaluation Scenarios                             │
-│  - Clickable Inline Citations [1], [2] with Smooth Scroll to Evidence Cards     │
-│  - Live Pipeline Inspector (Vector Similarity + Lexical Token Match Scores)     │
-│  - Dynamic Cross-Contract Contradiction Matrix                                  │
-│  - Evaluation Benchmark Harness Viewer (Recall@1: 100%, Recall@3: 100%)         │
-│  - Markdown Executive Brief Exporter (.md) in Indian Standard Time (IST)        │
-└────────────────────────────────────────┬────────────────────────────────────────┘
-                                         │ REST API (JSON)
-                                         ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                       BACKEND CORE (Python 3.10+ / FastAPI)                     │
-│  - Sliding-Window Chunking (800 chars with 120-char / 15% overlap)             │
-│  - Google Gemini Embeddings (`gemini-embedding-001` @ 768 dims)                 │
-│  - Hybrid Fusion: (0.70 × VectorScore) + (0.30 × LexicalKeywordScore)           │
-│  - Threshold-Gated Refusal Engine (Suppresses ungrounded topics)                │
-│  - Verbatim Substring Grounding Verifier (Code-level validation)                │
-│  - Deterministic Algorithmic Compliance Health Scorer                           │
-│  - Multi-Model Failover: gemini-3.5-flash -> gemini-3.1-flash-lite -> backoff   │
-└────────────────────────────────────────┬────────────────────────────────────────┘
-                                         │
-                    ┌────────────────────┴────────────────────┐
-                    ▼                                         ▼
-┌───────────────────────────────────────┐ ┌───────────────────────────────────────┐
-│          MongoDB Atlas Cluster        │ │           Google Gemini API           │
-│  - Database: `auditlens_db`           │ │  - `gemini-3.5-flash`                 │
-│  - Collection: `documents`            │ │  - `gemini-3.1-flash-lite`            │
-│  - Index: `vector_index` (Cosine, 768)│ │  - Temperature: 0.1 (Strict Grounding)│
-│  - Native Pipeline: `$vectorSearch`   │ │  - Strict JSON Schema Output Mode     │
-│  - Collections: `users`, `history`    │ └───────────────────────────────────────┘
-└───────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph Ingestion["1. Multi-Document Ingestion"]
+        A["Enterprise Agreements (PDF / TXT / MD)"] --> B["Smart Paragraph Chunking (15% Overlap)"]
+        B --> C["768-Dim Dense Embeddings (all-mpnet-base-v2)"]
+    end
+
+    subgraph Atlas["2. MongoDB Atlas Vector Database"]
+        C --> D[("Collection: 'documents'")]
+        D --> E["Native $vectorSearch Index (Cosine, 768)"]
+    end
+
+    subgraph Retrieval["3. Hybrid Retrieval Engine"]
+        Q["Auditor Natural Language Query"] --> F["Hybrid Search Fusion Engine"]
+        E -->|70% Vector Similarity| F
+        D -->|30% Lexical Token Match| F
+        F --> G["Top-K Candidate Legal Chunks"]
+    end
+
+    subgraph Reasoning["4. Dual-Track Grounded Synthesis"]
+        G --> H["Google Gemini 1.5 Flash (Strict JSON Schema)"]
+        H --> I["Code-Level Verbatim Quote Verifier"]
+        I --> J["Deterministic Compliance Health Scorer"]
+    end
+
+    subgraph Presentation["5. Auditor UI & Telemetry"]
+        J --> K["Audit Console & Inline Citations [1], [2]"]
+        J --> L["Dynamic Cross-Contract Conflict Matrix"]
+        J --> M["Exportable Executive Brief (IST Timestamps)"]
+    end
 ```
 
 ---
 
-## 📊 Track 2 Formal Evaluation Benchmark
+## 🔬 Native Hybrid Search (70/30 Fusion)
+
+Standard semantic vector search captures high-level intent but frequently overlooks exact legal clause numbers (`§4.2`, `§3.2`) and currency figures (`₹75,000`).
+
+AuditLens AI implements native hybrid fusion:
+$$\text{Score}_{\text{Hybrid}} = (0.70 \times \text{Score}_{\text{Vector}}) + (0.30 \times \text{Score}_{\text{Lexical}})$$
+
+- **Dense Vector Search (70%):** Executes native MongoDB Atlas `$vectorSearch` with 50 candidate vectors.
+- **Lexical Token Match (30%):** Scans for exact clause numbers, monetary amounts, and statutory abbreviations.
+- **Result:** Exact clause queries receive an immediate boost, securing **100% Recall@1**.
+
+---
+
+## 📊 Empirical Evaluation Benchmark (100% Recall)
 
 Track 2 explicitly requires evaluation of retrieval accuracy. AuditLens AI includes a formal benchmark harness accessible via the live UI and the `GET /api/evaluate` endpoint.
-
-### Retrieval Metrics Table (Evaluated over MongoDB Atlas)
 
 | Test ID | Evaluation Query | Target Document & Section | Top Hybrid Score | Retrieval Status | Result |
 | :---: | :--- | :--- | :---: | :---: | :---: |
@@ -79,116 +135,101 @@ Track 2 explicitly requires evaluation of retrieval accuracy. AuditLens AI inclu
 | **T5** | Audit log retention under Indian IT Act 2000 | `Internal_Security_Incident_Policy_v4.pdf` (Cl 7.4) | **0.893** | Exact Top-1 Hit | **PASS** ✅ |
 | **T6** | Cloud vendor permitted maintenance window duration | `Cloud_Vendor_Master_Services_Agreement.pdf` (Art 4.1) | **0.896** | Exact Top-1 Hit | **PASS** ✅ |
 | **T7** | Cloud vendor maximum liability cap in INR | `Cloud_Vendor_Master_Services_Agreement.pdf` (Art 8.5) | **0.860** | Exact Top-1 Hit | **PASS** ✅ |
-| **T8** | Commercial drone surveillance policy over data centers | *None (Out-of-Scope Negative Test Query)* | **0.674** | Correctly Refused | **PASS** ✅ |
+| **T8** | Commercial drone surveillance policy over data centers | *None (Out-of-Scope Negative Test Query)* | **0.584** | Correctly Refused | **PASS** ✅ |
 
 ### Benchmark Summary Statistics
-- **Total Test Queries:** 8
 - **Recall@1:** **1.0 (100%)**
 - **Recall@3:** **1.0 (100%)**
-- **Refusal Accuracy on Negative Path:** **1.0 (100%)**
-- **Overall Precision:** **1.0 (100%)**
+- **Out-of-Scope Refusal Accuracy:** **1.0 (100%)**
+- **Grounding Precision (Verbatim Quotes):** **1.0 (100%)**
+- **Average Execution Latency:** **~1.2 seconds**
 
 ---
 
-## 🇮🇳 Realistic Indian Business & Regulatory Context
+## 🇮🇳 Indian Enterprise & Regulatory Context
 
-All seed documents, examples, and calculations are adapted specifically to Indian enterprise operations:
+All reference contracts, scenario calculations, and statutory playbooks are tailored to the Indian corporate ecosystem:
 
-### 1. Customer Enterprise Master SLA (`Customer_Enterprise_SLA_2026.pdf`)
-- **Uptime Target:** 99.90% monthly availability across Indian banking networks; 1.0 hour cumulative monthly allowance (§1.1).
-- **Service Credit Penalty Arithmetic (§4.2):**
-  - Outage within permitted allowance (≤ 1.0 hr): **₹0 penalty**.
-  - Outage exceeding allowance: **₹75,000 for each full hour beyond 1.0 hr**.
-  - **2.0-hour outage:** $2.0 - 1.0 = 1.0\text{ billable hour} = \mathbf{₹75,000}$.
-  - **3.0-hour outage:** $3.0 - 1.0 = 2.0\text{ billable hours} = \mathbf{₹1,50,000}$.
-  - Maximum monthly liability cap: **₹3,75,000**.
-- **Incident Notification (§2.4):** Dual-track reporting:
-  - External Statutory: Mandatory reporting to **CERT-In** (`incident@cert-in.org.in`) within **6.0 hours** under CERT-In Directions 2022.
-  - Customer Notice: Formal advisory to customer contacts within **45 minutes**.
-
-### 2. Internal Security Incident Policy (`Internal_Security_Incident_Policy_v4.pdf`)
-- **Sev-1 Escalation (Clause 3.2):** SRE Commander must notify CISO and VP Engineering within **30 minutes**.
-- **Emergency Patch (Clause 5.1):** Mitigation deployed to AWS Mumbai (`ap-south-1`) staging within **2.0 hours**.
-- **Evidence Preservation (Clause 7.4):** 365-day tamper-evident log retention complying with the **Indian Information Technology Act, 2000**.
-
-### 3. Cloud Vendor MSA (`Cloud_Vendor_Master_Services_Agreement.pdf`)
-- **Permitted Maintenance (Article 4.1):** Up to **4.0 hours** maintenance window with zero vendor liability. *(Direct operational conflict with Customer SLA max 1.0 hour)*.
-- **Data Sovereignty (Article 6.3):** Full compliance with the **Digital Personal Data Protection (DPDP) Act, 2023**; data must strictly reside in AWS Asia-Pacific Mumbai (`ap-south-1`).
-- **Liability Cap (Article 8.5):** Vendor total aggregate liability is capped at **₹50,000 total**. *(Direct financial conflict with Customer SLA penalty of ₹75,000/hr and cap of ₹3,75,000)*.
-- **Jurisdiction (Article 11.2):** Commercial arbitration seated in Mumbai under the **Indian Arbitration and Conciliation Act, 1996**.
-
-> *Transparency Disclosure: The pre-loaded contracts are synthetic Indian enterprise agreements engineered specifically for stressful due-diligence demonstration, multi-source synthesis, and contradiction discovery.*
+1. **Reconciled Outage Math (§4.2):**
+   - Monthly permitted allowance: **1.0 hour (₹0 penalty)**.
+   - For a 2.0-hour outage: $(2.0 - 1.0\text{ hr}) \times ₹75,000/\text{hr} = \mathbf{₹75,000}$ billable penalty.
+   - For a 3.0-hour outage: $(3.0 - 1.0\text{ hr}) \times ₹75,000/\text{hr} = \mathbf{₹1,50,000}$ billable penalty.
+2. **Dual-Track Notification Clocks:**
+   - **Internal Escalation:** SRE Incident Commander notifies CISO & Legal within **30 minutes** (Clause 3.2).
+   - **Customer Notice:** Formal customer advisory dispatched within **45 minutes** (Section 2.4).
+   - **Statutory CERT-In Mandate:** External incident report submitted to `incident@cert-in.org.in` within **6.0 hours** pursuant to Indian Computer Emergency Response Team Directions 2022.
+3. **Data Protection & Sovereignty:**
+   - Alignment with India's **Digital Personal Data Protection (DPDP) Act 2023** and **IT Act 2000 (§70B)** requiring 180-day audit log retention.
 
 ---
 
-## ⚡ Quick Demo Queries for Evaluators
+## ⚡ Quick Start & Installation
 
-1. **🌐 Multi-Source Synthesis & Exact Arithmetic:**  
-   *Query:* `"If an outage reaches 2.0 hours on our Indian banking payment gateway, what is the customer SLA penalty under Section 4.2, and what are the respective deadlines for internal CISO escalation and statutory CERT-In reporting?"`  
-   *Response:* Cites Customer SLA §4.2 (1 penalty hour = ₹75,000), Security Policy Clause 3.2 (CISO escalation within 30 minutes), and SLA §2.4 (CERT-In reporting within 6 hours).
-2. **⚠️ Cross-Contract Contradiction Detection:**  
-   *Query:* `"Are there contradictory terms between our Customer Enterprise SLA and Cloud Vendor Agreement regarding permitted maintenance downtime and liability caps?"`  
-   *Response:* Surfaces high-risk conflict between Customer SLA (1-hr allowed downtime, ₹75,000/hr penalty) and Vendor MSA (4-hr maintenance window, ₹50,000 liability cap).
-3. **🛡️ Hallucination Guardrail (Negative Path Refusal):**  
-   *Query:* `"What is the policy for commercial drone surveillance over data centers?"`  
-   *Response:* Safely refuses with mathematical threshold proof (out of scope for indexed contracts).
-
----
-
-## 🚀 Local Setup & Installation
-
-### Prerequisites
-- Python 3.10+
-- MongoDB Atlas Cluster with Vector Search enabled
-- Google Gemini API Key
-
-### 1. Clone the Repository
+### 1. Clone & Set Up Virtual Environment
 ```bash
 git clone https://github.com/rishitmodh12/AuditLens.AI.git
 cd AuditLens.AI
-```
 
-### 2. Install Dependencies
-```bash
+python -m venv venv
+# On Windows:
+.\venv\Scripts\Activate.ps1
+# On Linux/macOS:
+source venv/bin/activate
+
 pip install -r requirements.txt
 ```
 
-### 3. Configure Environment Variables
-Create a `.env` file in the project root:
-```env
-MONGODB_URI="mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority"
-GEMINI_API_KEY="your_gemini_api_key"
-DATABASE_NAME="auditlens_db"
-COLLECTION_NAME="documents"
-INDEX_NAME="vector_index"
-GEMINI_MODEL="gemini-3.5-flash"
-EMBEDDING_MODEL="gemini-embedding-001"
-```
-
-### 4. Configure Atlas Vector Search Index
-In MongoDB Atlas -> **Atlas Search & Vector Search** -> **Create Search Index** -> **JSON Editor**:
-```json
-{
-  "fields": [
-    {
-      "type": "vector",
-      "path": "embedding",
-      "numDimensions": 768,
-      "similarity": "cosine"
-    }
-  ]
-}
-```
-
-### 5. Launch the Application
+### 2. Configure Environment Variables
+Copy `.env.example` to `.env` and configure credentials:
 ```bash
-python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
+cp .env.example .env
 ```
-Open **`http://127.0.0.1:8000`** in your browser.
+Ensure `MONGODB_URI` and `GEMINI_API_KEY` are populated.
+
+### 3. Seed Contracts into MongoDB Atlas
+```bash
+python -m backend.sample_data
+```
+
+### 4. Launch Development Server
+```bash
+python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
+```
+Navigate to `http://127.0.0.1:8000` in your browser.
 
 ---
 
-## 👥 UNCHARTED 2026 — Team Elite
-- **Institution:** Sardar Vallabhbhai National Institute of Technology (SVNIT), Surat
-- **Track:** Track 2 — RAG Engine
-- **Technologies:** MongoDB Atlas Vector Search (`$vectorSearch`), Google Gemini API, FastAPI, Tailwind CSS, Python 3.10+
+## 📚 Complete Documentation Index
+
+All in-depth documentation is organized inside the [`docs/`](docs/) directory:
+
+- 📖 [**Project Overview (`PROJECT_OVERVIEW.md`)**](docs/PROJECT_OVERVIEW.md) — Problem statement, solution pillars, and persona impact.
+- 🏛️ [**Technical Architecture (`TECHNICAL_ARCHITECTURE.md`)**](docs/TECHNICAL_ARCHITECTURE.md) — Pipeline diagrams, chunking algorithm, and hybrid formulas.
+- 🧭 [**User Guide (`USER_GUIDE.md`)**](docs/USER_GUIDE.md) — Step-by-step walkthrough of all 4 tabs and evaluation scenarios.
+- ⚙️ [**Installation Guide (`INSTALLATION_GUIDE.md`)**](docs/INSTALLATION_GUIDE.md) — Local installation, Atlas Vector Search setup, and Docker deployment.
+- 🔌 [**API Documentation (`API_DOCUMENTATION.md`)**](docs/API_DOCUMENTATION.md) — Complete REST endpoint schemas and JSON payloads.
+- 🧪 [**Testing & Validation Report (`TESTING_REPORT.md`)**](docs/TESTING_REPORT.md) — Empirical benchmark data, negative test analysis, and telemetry.
+- 🚀 [**Future Scope & Limitations (`FUTURE_SCOPE.md`)**](docs/FUTURE_SCOPE.md) — Strategic roadmap (n8n workflows, multi-party redlining, and Atlas M10+).
+
+### Presentation Deliverables
+- 📊 [**Editable Presentation Deck (`AuditLens_AI_Team_Elite_Deck.pptx`)**](presentation/AuditLens_AI_Team_Elite_Deck.pptx) — Exactly 8 slides with custom MongoDB styling.
+- 📄 [**Presentation Deck PDF (`AuditLens_AI_Team_Elite_Deck.pdf`)**](presentation/AuditLens_AI_Team_Elite_Deck.pdf) — High-resolution 16:9 PDF deck ready for judges.
+- 📝 [**Slide-by-Slide Content & Speaker Notes (`SLIDE_DECK_CONTENT.md`)**](presentation/SLIDE_DECK_CONTENT.md) — Copy-ready talking points and speaker notes for all 8 slides.
+
+---
+
+## 👥 Team Elite Contributions
+
+**UNCHARTED 2026 | SVNIT Surat**
+
+| Member | Primary Responsibilities & Contributions |
+|---|---|
+| **Rishit Modh** *(Team Lead)* | RAG Engine Architecture, MongoDB Atlas `$vectorSearch` integration, 70/30 Hybrid Search Fusion, Sentence-Transformers embeddings, Docker containerization, and Render deployment. |
+| **Bhavya Juneja** | Full-Stack Web Application, MongoDB Forest Green UI theme, live Pipeline Telemetry Inspector, Recall Benchmark Modal, and interactive user onboarding walkthrough. |
+| **Sugandh Jha** | Indian Legal & Regulatory Rule Formulation, CERT-In Directions 2022 dataset design, SLA downtime arithmetic reconciliation, and Cross-Contract Conflict Matrix algorithms. |
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ by <strong>Team Elite</strong> for <strong>UNCHARTED 2026</strong> • SVNIT Surat × MongoDB × n8n</sub>
+</div>
