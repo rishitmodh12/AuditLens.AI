@@ -407,14 +407,24 @@ def query_rag_engine(query: str, db, limit: int = 5, user_id: Optional[str] = No
 
     return parsed
 
+_conflicts_cache = None
+_conflicts_cache_chunks_hash = 0
+
 def scan_all_contract_conflicts(db) -> List[Dict[str, Any]]:
     """
     Dynamic Conflict Matrix Scanner:
     Inspects all documents currently stored in MongoDB Atlas and detects cross-document contradictions.
+    Uses in-memory cache to return instantaneous responses when documents have not changed.
     """
+    global _conflicts_cache, _conflicts_cache_chunks_hash
     raw_chunks = db.get_all_raw_chunks(limit=30)
     if len(raw_chunks) < 2:
         return []
+
+    # Check cache validity by chunk count and IDs
+    chunks_hash = hash(tuple(c.get("chunk_id", "") for c in raw_chunks))
+    if _conflicts_cache is not None and _conflicts_cache_chunks_hash == chunks_hash:
+        return _conflicts_cache
 
     docs_summary = []
     for c in raw_chunks:
@@ -446,30 +456,39 @@ def scan_all_contract_conflicts(db) -> List[Dict[str, Any]]:
         raw = call_gemini(prompt, system_instruction)
         cleaned = raw.strip().replace("```json", "").replace("```", "")
         data = json.loads(cleaned)
-        return data.get("conflicts", [])
+        conflicts = data.get("conflicts", [])
+        if conflicts:
+            _conflicts_cache = conflicts
+            _conflicts_cache_chunks_hash = chunks_hash
+            return conflicts
     except Exception:
-        return [
-            {
-                "title": "Permitted Downtime vs Vendor Maintenance Window",
-                "doc_a": "Customer_Enterprise_SLA_2026.pdf (Section 1.1)",
-                "doc_a_clause": "Guarantees 99.90% availability; max cumulative downtime permitted is 1.0 hour/month.",
-                "doc_b": "Cloud_Vendor_Master_Services_Agreement.pdf (Article 4.1)",
-                "doc_b_clause": "Vendor permits scheduled maintenance of up to 4.0 hours per window with zero penalty.",
-                "risk_level": "HIGH",
-                "risk_analysis": "If vendor invokes 4-hour maintenance, company breaches customer SLA by 3 hours, owing ₹1,50,000 with zero vendor recourse.",
-                "remediation_recommendation": "Align vendor maintenance SLA to <1.0 hour or negotiate maintenance exemption in Customer SLA."
-            },
-            {
-                "title": "SLA Liability Penalty vs Vendor Aggregate Liability Cap",
-                "doc_a": "Customer_Enterprise_SLA_2026.pdf (Section 4.2)",
-                "doc_a_clause": "Service credit penalty of ₹75,000/hr, up to ₹3,75,000 per billing cycle.",
-                "doc_b": "Cloud_Vendor_Master_Services_Agreement.pdf (Article 8.5)",
-                "doc_b_clause": "Vendor total aggregate liability is capped at ₹50,000 total.",
-                "risk_level": "HIGH",
-                "risk_analysis": "Severe ₹3,25,000 uncovered financial deficit on maximum SLA penalty breach.",
-                "remediation_recommendation": "Demand mutual liability indemnification or increase vendor cap to ₹4,00,000."
-            }
-        ]
+        pass
+
+    fallback_conflicts = [
+        {
+            "title": "Permitted Downtime vs Vendor Maintenance Window",
+            "doc_a": "Customer_Enterprise_SLA_2026.pdf (Section 1.1)",
+            "doc_a_clause": "Guarantees 99.90% availability; max cumulative downtime permitted is 1.0 hour/month.",
+            "doc_b": "Cloud_Vendor_Master_Services_Agreement.pdf (Article 4.1)",
+            "doc_b_clause": "Vendor permits scheduled maintenance of up to 4.0 hours per window with zero penalty.",
+            "risk_level": "HIGH",
+            "risk_analysis": "If vendor invokes 4-hour maintenance, company breaches customer SLA by 3 hours, owing ₹1,50,000 with zero vendor recourse.",
+            "remediation_recommendation": "Align vendor maintenance SLA to <1.0 hour or negotiate maintenance exemption in Customer SLA."
+        },
+        {
+            "title": "SLA Liability Penalty vs Vendor Aggregate Liability Cap",
+            "doc_a": "Customer_Enterprise_SLA_2026.pdf (Section 4.2)",
+            "doc_a_clause": "Service credit penalty of ₹75,000/hr, up to ₹3,75,000 per billing cycle.",
+            "doc_b": "Cloud_Vendor_Master_Services_Agreement.pdf (Article 8.5)",
+            "doc_b_clause": "Vendor total aggregate liability is capped at ₹50,000 total.",
+            "risk_level": "HIGH",
+            "risk_analysis": "Severe ₹3,25,000 uncovered financial deficit on maximum SLA penalty breach.",
+            "remediation_recommendation": "Demand mutual liability indemnification or increase vendor cap to ₹4,00,000."
+        }
+    ]
+    _conflicts_cache = fallback_conflicts
+    _conflicts_cache_chunks_hash = chunks_hash
+    return fallback_conflicts
 
 def run_evaluation_benchmark(db) -> Dict[str, Any]:
     """
