@@ -211,9 +211,14 @@ All in-depth documentation is organized inside the [`docs/`](docs/) directory:
 - 🧪 [**Testing & Validation Report (`TESTING_REPORT.md`)**](docs/TESTING_REPORT.md) — Empirical benchmark data, negative test analysis, and telemetry.
 - 🚀 [**Future Scope & Limitations (`FUTURE_SCOPE.md`)**](docs/FUTURE_SCOPE.md) — Strategic roadmap (n8n workflows, multi-party redlining, and Atlas M10+).
 
-### Presentation Deliverables
-- 📊 [**Editable Presentation Deck (`AuditLens_AI_Team_Elite_Deck.pptx`)**](presentation/AuditLens_AI_Team_Elite_Deck.pptx) — Exactly 8 slides with custom MongoDB styling.
-- 📄 [**Presentation Deck PDF (`AuditLens_AI_Team_Elite_Deck.pdf`)**](presentation/AuditLens_AI_Team_Elite_Deck.pdf) — High-resolution 16:9 PDF deck ready for judges.
+### Presentation Deliverables (Official UNCHARTED 2026 Template)
+
+- 📥 [**Download Editable Presentation Deck (PPTX)**](https://github.com/rishitmodh12/AuditLens.AI/raw/main/presentation/AuditLens_AI_Official_Template.pptx) — *Direct 1-click download of the official PowerPoint deck*
+- 📄 [**View Presentation Deck PDF (In Browser / GitHub)**](presentation/AuditLens_AI_Official_Template.pdf) — *High-resolution 16:9 PDF deck matching the official hackathon template*
+- 🌐 [**Open Interactive HTML Slide Deck (Live Web)**](https://auditlens-ai-13xs.onrender.com/presentation/official_template_deck.html) — *Viewable directly in your browser with zero downloads*
+- 📝 [**Slide-by-Slide Content & Speaker Notes (`SLIDE_DECK_CONTENT.md`)**](presentation/SLIDE_DECK_CONTENT.md) — *Copy-ready slide points and speaker script*
+
+*(Note: The deck is also mirrored as [`AuditLens_AI_Team_Elite_Deck.pptx`](https://github.com/rishitmodh12/AuditLens.AI/raw/main/presentation/AuditLens_AI_Team_Elite_Deck.pptx) and [`AuditLens_AI_Team_Elite_Deck.pdf`](presentation/AuditLens_AI_Team_Elite_Deck.pdf) for convenience).*
 
 ---
 

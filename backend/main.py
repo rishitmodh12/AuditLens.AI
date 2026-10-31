@@ -233,10 +233,14 @@ def reset_database():
     db.clear_all()
     return {"status": "success", "message": "Database cleared."}
 
-# Mount static frontend
+# Mount static frontend & presentation decks
 frontend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
 if os.path.exists(frontend_dir):
     app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
+
+presentation_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "presentation")
+if os.path.exists(presentation_dir):
+    app.mount("/presentation", StaticFiles(directory=presentation_dir), name="presentation")
 
 @app.get("/")
 def serve_index():
@@ -244,3 +248,4 @@ def serve_index():
     if os.path.exists(index_file):
         return FileResponse(index_file)
     return HTMLResponse("<h2>AuditLens AI Backend Running! Frontend loading...</h2>")
+
